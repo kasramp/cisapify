@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns:thi="http://www.w3.org/1999/xhtml"
+      th:replace="~{fragments/layout :: layout (~{::body},'upload')}">
+
+<body>
+
+<div th:if="${message}">
+    <h2 th:text="${message}"/>
+</div>
+
+<div th:if="${file}">
+    <audio controls>
+        <source th:src="@{${file}}" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+</div>
+
+<div>
+    <ul>
+
+        <li th:each="song : ${songs}">
+        <!--<td th:text="${song.key}">keyvalue</td>
+        <td th:text="${song.value}">num</td>-->
+        <!--<li th:each="song : ${songs}">-->
+            <a th:href="${song.key}" th:text="${song.value}" />
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>

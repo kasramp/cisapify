@@ -7,3 +7,9 @@ Web version of [cisap](https://cisap.madadipouya.com)
 ```bash
 $ mvn spring-boot:run
 ```
+
+Run with `developer` profile
+
+```bash
+$ mvn clean compile -Pdeveloper
+```

@@ -34,19 +34,19 @@ public class PlayerController {
     @GetMapping("/player_old")
     public String showPlayer(Map<String, Object> model) throws StorageException {
         model.put("songs", uploadService.loadAll().collect(Collectors.toMap(this::createResourceURI, Path::getFileName)));
-        return "player_old";
+        return "user/player/player_old.html";
     }
 
     @GetMapping("/player")
     public String showPlayer1(Map<String, Object> model) throws StorageException {
         model.put("songs", uploadService.loadAll().collect(Collectors.toMap(this::createResourceURI, Path::getFileName)));
-        return "player";
+        return "user/player/player.html";
     }
 
     @GetMapping("/play/{songName}")
     public String playSong(@PathVariable String songName, Map<String, Object> model) {
         model.put("file", MvcUriComponentsBuilder.fromMethodName(PlayerController.class, "serveFile", songName).build().toString());
-        return "player_old";
+        return "user/player/player_old.html";
     }
 
     @GetMapping("/files/{filename:.+}")

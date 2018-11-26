@@ -22,6 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.net.URLEncoder.encode;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.fromMethodName;
+
 @Controller
 public class PlayerController {
 
@@ -32,33 +36,33 @@ public class PlayerController {
     }
 
     @GetMapping("/player_old")
-    public String showPlayer(Map<String, Object> model) throws StorageException {
+    public String showOldPlayer(Map<String, Object> model) throws StorageException {
         model.put("songs", uploadService.loadAll().collect(Collectors.toMap(this::createResourceURI, Path::getFileName)));
         return "user/player/player_old.html";
     }
 
     @GetMapping("/player")
-    public String showPlayer1(Map<String, Object> model) throws StorageException {
+    public String showPlayer(Map<String, Object> model) throws StorageException {
         model.put("songs", uploadService.loadAll().collect(Collectors.toMap(this::createResourceURI, Path::getFileName)));
         return "user/player/player.html";
     }
 
     @GetMapping("/play/{songName}")
     public String playSong(@PathVariable String songName, Map<String, Object> model) {
-        model.put("file", MvcUriComponentsBuilder.fromMethodName(PlayerController.class, "serveFile", songName).build().toString());
+        model.put("file", fromMethodName(PlayerController.class, "serveFile", songName).build().toString());
         return "user/player/player_old.html";
     }
 
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws StorageFileNotFoundException {
-        Resource file = uploadService.load(URLDecoder.decode(filename, StandardCharsets.UTF_8));
+        Resource file = uploadService.load(URLDecoder.decode(filename, UTF_8));
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
     @GetMapping(value = "/playlist", produces = "application/json")
-    public ResponseEntity<List<SongDto>> getPlayList(HttpServletRequest request) throws StorageException {
+    public ResponseEntity<List<SongDto>> getPlayList() throws StorageException {
         return ResponseEntity.ok(uploadService.loadAll()
                 .map(path -> new SongDto(path.getFileName().toString(), getServiceResourceURI(path))).collect(Collectors.toList()));
     }
@@ -97,13 +101,19 @@ public class PlayerController {
         }
     }
 
+    private static String createResourceURI(Class<?> clazz, String methodName, Path path, Object... args) {
+        return fromMethodName(clazz, methodName, encode(path.getFileName().toString(), UTF_8), args)
+                .build()
+                .toString();
+    }
+
     private String createResourceURI(Path path) {
-        return MvcUriComponentsBuilder.fromMethodName(PlayerController.class,
-                "playSong", URLEncoder.encode(path.getFileName().toString(), StandardCharsets.UTF_8), new HashMap<>()).build().toString();
+        return fromMethodName(PlayerController.class,
+                "playSong", encode(path.getFileName().toString(), UTF_8), new HashMap<>()).build().toString();
     }
 
     private String getServiceResourceURI(Path path) {
-        return MvcUriComponentsBuilder.fromMethodName(PlayerController.class,
-                "serveFile", URLEncoder.encode(path.getFileName().toString(), StandardCharsets.UTF_8)).build().toString();
+        return fromMethodName(PlayerController.class,
+                "serveFile", encode(path.getFileName().toString(), UTF_8)).build().toString();
     }
 }

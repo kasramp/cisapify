@@ -63,3 +63,15 @@ CREATE TABLE IF NOT EXISTS visits (
   description VARCHAR(255),
   FOREIGN KEY (pet_id) REFERENCES pets(id)
 ) engine=InnoDB;
+
+
+-- CISAPIFY
+CREATE TABLE songs (
+  id    INTEGER IDENTITY PRIMARY KEY,
+  name  VARCHAR(4096) NOT NULL,
+  uri   VARCHAR(4096) NOT NULL,
+  CONSTRAINT uc_song_uri UNIQUE(uri)
+) engine=InnoDB;
+
+CREATE INDEX idx_song_name ON songs (name);
+-- END CISAPIFY

@@ -1,6 +1,5 @@
 package com.madadipouya.cisapify.user.player.song.model;
 
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -18,7 +17,7 @@ public class Song {
 
     @Column(name = "name", nullable = false)
     @NotBlank
-    @Size(min = 2, max = 256)
+    @Size(min = 2, max = 4096)
     private String name;
 
     @Column(name = "uri", nullable = false)

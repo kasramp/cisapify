@@ -2,6 +2,11 @@ package com.madadipouya.cisapify.util;
 
 import java.nio.file.Path;
 
+import static java.net.URLEncoder.encode;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.fromMethodName;
+
 public class ResourceURIBuilder {
 
     private final Class<?> clazz;
@@ -29,7 +34,7 @@ public class ResourceURIBuilder {
     }
 
     public ResourceURIBuilder withPath(Path path) {
-
+        this.path = path.getFileName().toString();
         return this;
     }
 
@@ -39,6 +44,7 @@ public class ResourceURIBuilder {
     }
 
     public String build() {
-        return "";
+        return isBlank(path) ? fromMethodName(clazz, methodName, args).build().toString() :
+                fromMethodName(clazz, methodName, encode(path, UTF_8), args).build().toString();
     }
 }

@@ -19,18 +19,18 @@ public class SongUploadController {
     }
 
     @PostMapping("/upload")
-    public String postUploadSong(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) throws StorageException {
+    public String doUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) throws StorageException {
 
         uploadService.store(file);
 
         redirectAttributes.addFlashAttribute("message",
-            "You successfully uploaded " + file.getOriginalFilename() + "!");
+                "You successfully uploaded " + file.getOriginalFilename() + "!");
 
-        return "redirect:/upload.html";
+        return "redirect:/upload";
     }
 
-    @GetMapping("/upload.html")
-    public String showVetList() {
+    @GetMapping("/upload")
+    public String showUploadForm() {
         return "user/player/upload/song_upload";
     }
 }

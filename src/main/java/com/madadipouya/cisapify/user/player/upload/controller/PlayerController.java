@@ -3,6 +3,7 @@ package com.madadipouya.cisapify.user.player.upload.controller;
 import com.madadipouya.cisapify.user.player.upload.service.UploadService;
 import com.madadipouya.cisapify.user.player.upload.service.exception.StorageException;
 import com.madadipouya.cisapify.user.player.upload.service.exception.StorageFileNotFoundException;
+import com.madadipouya.cisapify.util.ResourceURIBuilder;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +32,11 @@ public class PlayerController {
 
     private final UploadService uploadService;
 
+    private final ResourceURIBuilder resourceURIBuilder;
+
     public PlayerController(UploadService uploadService) {
         this.uploadService = uploadService;
+        this.resourceURIBuilder = new ResourceURIBuilder(PlayerController.class);
     }
 
     @GetMapping("/player_old")

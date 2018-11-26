@@ -16,6 +16,13 @@ public class ResourceURIBuilder {
         this.clazz = clazz;
     }
 
+    public ResourceURIBuilder withClearState() {
+        methodName = null;
+        path = null;
+        args = null;
+        return this;
+    }
+
     public ResourceURIBuilder withMethodName(String methodName) {
         this.methodName = methodName;
         return this;

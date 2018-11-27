@@ -6,9 +6,9 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "songs",
-    indexes = {
-        @Index(columnList = "name", name = "idx_song_name")},
-    uniqueConstraints = @UniqueConstraint(name = "uc_song_uri", columnNames = {"uri"}))
+        indexes = {
+                @Index(columnList = "name", name = "idx_song_name")},
+        uniqueConstraints = @UniqueConstraint(name = "uc_song_uri", columnNames = {"uri"}))
 public class Song {
 
     @Id

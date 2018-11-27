@@ -1,8 +1,11 @@
 package com.madadipouya.cisapify.user.player.upload.service.impl;
 
+import com.madadipouya.cisapify.user.player.song.model.Song;
+import com.madadipouya.cisapify.user.player.song.repository.SongRepository;
 import com.madadipouya.cisapify.user.player.upload.service.UploadService;
 import com.madadipouya.cisapify.user.player.upload.service.exception.StorageException;
 import com.madadipouya.cisapify.user.player.upload.service.exception.StorageFileNotFoundException;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RegExUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -17,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @Service
@@ -26,27 +30,36 @@ public class FileUploadService implements UploadService {
 
     private final Path rootLocation;
 
-    public FileUploadService() {
+    private final SongRepository songRepository;
+
+    public FileUploadService(SongRepository songRepository) {
+        this.songRepository = songRepository;
         rootLocation = Paths.get(path);
     }
 
     @Override
     public void store(MultipartFile file) throws StorageException {
-        String filename = RegExUtils.replaceAll(StringUtils.cleanPath(file.getOriginalFilename()), "#", "");
+        String displayName = RegExUtils.replaceAll(StringUtils.cleanPath(file.getOriginalFilename()), "#", "");
+        String storedFileName = String.format("%s.%s", UUID.randomUUID().toString(), FilenameUtils.getExtension(displayName));
+
         try {
             if (file.isEmpty()) {
-                throw new StorageException(String.format("Failed to store empty file %s", filename));
+                throw new StorageException(String.format("Failed to store empty file %s", displayName));
             }
-            if (filename.contains("..")) {
+            if (displayName.contains("..")) {
                 // This is a security check
-                throw new StorageException(String.format("Cannot store file with relative path outside current directory %s", filename));
+                throw new StorageException(String.format("Cannot store file with relative path outside current directory %s", displayName));
             }
             try (InputStream inputStream = file.getInputStream()) {
-                Files.copy(inputStream, rootLocation.resolve(filename),
-                        StandardCopyOption.REPLACE_EXISTING);
+                Path fileFullPath = rootLocation.resolve(storedFileName);
+                Files.copy(inputStream, fileFullPath, StandardCopyOption.REPLACE_EXISTING);
+                Song song = new Song();
+                song.setName(displayName);
+                song.setUri(fileFullPath.toString());
+                songRepository.save(song);
             }
         } catch (IOException e) {
-            throw new StorageException(String.format("Failed to store file %s", filename), e);
+            throw new StorageException(String.format("Failed to store file %s", displayName), e);
         }
     }
 

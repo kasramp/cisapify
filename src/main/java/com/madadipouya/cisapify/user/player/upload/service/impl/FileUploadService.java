@@ -40,6 +40,7 @@ public class FileUploadService implements UploadService {
     @Override
     public void store(MultipartFile file) throws StorageException {
         String displayName = RegExUtils.replaceAll(StringUtils.cleanPath(file.getOriginalFilename()), "#", "");
+
         String storedFileName = String.format("%s.%s", UUID.randomUUID().toString(), FilenameUtils.getExtension(displayName));
 
         try {
@@ -53,10 +54,7 @@ public class FileUploadService implements UploadService {
             try (InputStream inputStream = file.getInputStream()) {
                 Path fileFullPath = rootLocation.resolve(storedFileName);
                 Files.copy(inputStream, fileFullPath, StandardCopyOption.REPLACE_EXISTING);
-                Song song = new Song();
-                song.setName(displayName);
-                song.setUri(fileFullPath.toString());
-                songRepository.save(song);
+                songRepository.save(new Song(displayName, fileFullPath.toString()));
             }
         } catch (IOException e) {
             throw new StorageException(String.format("Failed to store file %s", displayName), e);

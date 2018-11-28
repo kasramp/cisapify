@@ -1,5 +1,6 @@
 package com.madadipouya.cisapify.user.player.song.service.impl;
 
+import com.madadipouya.cisapify.user.player.song.model.Song;
 import com.madadipouya.cisapify.user.player.song.repository.SongRepository;
 import com.madadipouya.cisapify.user.player.song.service.SongService;
 import org.springframework.stereotype.Service;
@@ -18,5 +19,10 @@ public class SongServiceImpl implements SongService {
     @Override
     public String getDisplayName(Path path) {
         return songRepository.findByFileName(path.getFileName().toString()).getDisplayName();
+    }
+
+    @Override
+    public Song save(Song song) {
+        return songRepository.save(song);
     }
 }

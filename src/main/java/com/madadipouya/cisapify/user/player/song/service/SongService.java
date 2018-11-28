@@ -11,4 +11,11 @@ public interface SongService {
      * @return song display name
      */
     String getDisplayName(Path path);
+
+    /**
+     * Persists a {@link Song} to the database
+     * @param song to persist
+     * @return the persisted instance of {@link Song} with {@link Song#id}
+     */
+    Song save(Song song);
 }

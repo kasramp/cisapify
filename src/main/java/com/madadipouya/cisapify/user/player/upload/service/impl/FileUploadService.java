@@ -1,7 +1,7 @@
 package com.madadipouya.cisapify.user.player.upload.service.impl;
 
 import com.madadipouya.cisapify.user.player.song.model.Song;
-import com.madadipouya.cisapify.user.player.song.repository.SongRepository;
+import com.madadipouya.cisapify.user.player.song.service.SongService;
 import com.madadipouya.cisapify.user.player.upload.service.UploadService;
 import com.madadipouya.cisapify.user.player.upload.service.exception.StorageException;
 import com.madadipouya.cisapify.user.player.upload.service.exception.StorageFileNotFoundException;
@@ -30,10 +30,10 @@ public class FileUploadService implements UploadService {
 
     private final Path rootLocation;
 
-    private final SongRepository songRepository;
+    private final SongService songService;
 
-    public FileUploadService(SongRepository songRepository) {
-        this.songRepository = songRepository;
+    public FileUploadService(SongService songService) {
+        this.songService = songService;
         rootLocation = Paths.get(path);
     }
 
@@ -54,7 +54,7 @@ public class FileUploadService implements UploadService {
             try (InputStream inputStream = file.getInputStream()) {
                 Path fileFullPath = rootLocation.resolve(storedFileName);
                 Files.copy(inputStream, fileFullPath, StandardCopyOption.REPLACE_EXISTING);
-                songRepository.save(new Song(displayName, storedFileName, fileFullPath.toString()));
+                songService.save(new Song(displayName, storedFileName, fileFullPath.toString()));
             }
         } catch (IOException e) {
             throw new StorageException(String.format("Failed to store file %s", displayName), e);

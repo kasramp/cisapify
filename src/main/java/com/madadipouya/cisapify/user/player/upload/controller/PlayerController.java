@@ -1,5 +1,6 @@
 package com.madadipouya.cisapify.user.player.upload.controller;
 
+import com.madadipouya.cisapify.user.player.song.repository.SongRepository;
 import com.madadipouya.cisapify.user.player.upload.service.UploadService;
 import com.madadipouya.cisapify.user.player.upload.service.exception.StorageException;
 import com.madadipouya.cisapify.user.player.upload.service.exception.StorageFileNotFoundException;
@@ -27,20 +28,22 @@ public class PlayerController {
 
     private final ResourceURIBuilder resourceURIBuilder;
 
-    public PlayerController(UploadService uploadService) {
+    private final SongRepository songRepository;
+
+    public PlayerController(UploadService uploadService, SongRepository songRepository) {
         this.uploadService = uploadService;
+        this.songRepository = songRepository;
         this.resourceURIBuilder = new ResourceURIBuilder(PlayerController.class);
     }
 
     @GetMapping("/player_old")
     public String showOldPlayer(Map<String, Object> model) throws StorageException {
-        model.put("songs", uploadService.loadAll().collect(Collectors.toMap(this::createSongsURI, Path::getFileName)));
+        model.put("songs", uploadService.loadAll().collect(Collectors.toMap(this::createSongsURI, this::getSongDisplayName)));
         return "user/player/player_old.html";
     }
 
     @GetMapping("/player")
-    public String showPlayer(Map<String, Object> model) throws StorageException {
-        model.put("songs", uploadService.loadAll().collect(Collectors.toMap(this::createSongsURI, Path::getFileName)));
+    public String showPlayer() {
         return "user/player/player.html";
     }
 
@@ -61,7 +64,7 @@ public class PlayerController {
     @GetMapping(value = "/playlist", produces = "application/json")
     public ResponseEntity<List<SongDto>> getPlayList() throws StorageException {
         return ResponseEntity.ok(uploadService.loadAll()
-                .map(path -> new SongDto(path.getFileName().toString(),
+                .map(path -> new SongDto(getSongDisplayName(path),
                         resourceURIBuilder.withClearState().withMethodName("serveFile").withPath(path).build())
                 ).collect(Collectors.toList()));
     }
@@ -72,6 +75,10 @@ public class PlayerController {
                 .withPath(path)
                 .withParameters(Map.of())
                 .build();
+    }
+
+    private String getSongDisplayName(Path path) {
+        return songRepository.findByFileName(path.getFileName().toString()).getDisplayName();
     }
 
     public static class SongDto {

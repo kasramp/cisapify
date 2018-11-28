@@ -1,6 +1,7 @@
 package com.madadipouya.cisapify.util;
 
 import java.nio.file.Path;
+import java.util.Objects;
 
 import static java.net.URLEncoder.encode;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -44,7 +45,14 @@ public class ResourceURIBuilder {
     }
 
     public String build() {
-        return isBlank(path) ? fromMethodName(clazz, methodName, args).build().toString() :
-                fromMethodName(clazz, methodName, encode(path, UTF_8), args).build().toString();
+        String builderPath;
+        if(isBlank(path)) {
+            builderPath = fromMethodName(clazz, methodName, args).build().toString();
+        } else if(Objects.isNull(args)) {
+            builderPath = fromMethodName(clazz, methodName, encode(path, UTF_8)).build().toString();
+        } else {
+            builderPath = fromMethodName(clazz, methodName, encode(path, UTF_8), args).build().toString();
+        }
+        return builderPath;
     }
 }

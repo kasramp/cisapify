@@ -54,7 +54,7 @@ public class FileUploadService implements UploadService {
             try (InputStream inputStream = file.getInputStream()) {
                 Path fileFullPath = rootLocation.resolve(storedFileName);
                 Files.copy(inputStream, fileFullPath, StandardCopyOption.REPLACE_EXISTING);
-                songRepository.save(new Song(displayName, fileFullPath.toString()));
+                songRepository.save(new Song(displayName, storedFileName, fileFullPath.toString()));
             }
         } catch (IOException e) {
             throw new StorageException(String.format("Failed to store file %s", displayName), e);

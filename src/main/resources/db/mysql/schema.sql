@@ -67,11 +67,12 @@ CREATE TABLE IF NOT EXISTS visits (
 
 -- CISAPIFY
 CREATE TABLE songs (
-  id    INTEGER IDENTITY PRIMARY KEY,
-  name  VARCHAR(4096) NOT NULL,
-  uri   VARCHAR(4096) NOT NULL,
-  CONSTRAINT uc_song_uri UNIQUE(uri)
+  id  INTEGER IDENTITY PRIMARY KEY,
+  display_name  VARCHAR(4096) NOT NULL,
+  file_name VARCHAR(128) NOT NULL,
+  uri VARCHAR(4096) NOT NULL,
+  CONSTRAINT uc_song_uri UNIQUE(uri),
+  CONSTRAINT uc_song_file_name UNIQUE(file_name)
 ) engine=InnoDB;
-
-CREATE INDEX idx_song_name ON songs (name);
+CREATE INDEX idx_song_file_name ON songs (file_name);
 -- END CISAPIFY

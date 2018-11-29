@@ -1,7 +1,7 @@
-package com.madadipouya.cisapify.user.player.song.service;
+package com.madadipouya.cisapify.user.song.service;
 
 import java.nio.file.Path;
-import com.madadipouya.cisapify.user.player.song.model.Song;
+import com.madadipouya.cisapify.user.song.model.Song;
 
 public interface SongService {
 

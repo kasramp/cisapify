@@ -1,7 +1,7 @@
-package com.madadipouya.cisapify.user.player.upload.controller;
+package com.madadipouya.cisapify.user.upload.controller;
 
-import com.madadipouya.cisapify.user.player.upload.service.UploadService;
-import com.madadipouya.cisapify.user.player.upload.service.exception.StorageException;
+import com.madadipouya.cisapify.user.upload.service.UploadService;
+import com.madadipouya.cisapify.user.upload.service.exception.StorageException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

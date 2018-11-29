@@ -1,4 +1,4 @@
-package com.madadipouya.cisapify.user.player.song.model;
+package com.madadipouya.cisapify.user.song.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

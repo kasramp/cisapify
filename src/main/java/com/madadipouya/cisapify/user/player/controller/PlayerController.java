@@ -1,9 +1,9 @@
-package com.madadipouya.cisapify.user.player.upload.controller;
+package com.madadipouya.cisapify.user.player.controller;
 
-import com.madadipouya.cisapify.user.player.song.service.SongService;
-import com.madadipouya.cisapify.user.player.upload.service.UploadService;
-import com.madadipouya.cisapify.user.player.upload.service.exception.StorageException;
-import com.madadipouya.cisapify.user.player.upload.service.exception.StorageFileNotFoundException;
+import com.madadipouya.cisapify.user.song.service.SongService;
+import com.madadipouya.cisapify.user.upload.service.UploadService;
+import com.madadipouya.cisapify.user.upload.service.exception.StorageException;
+import com.madadipouya.cisapify.user.upload.service.exception.StorageFileNotFoundException;
 import com.madadipouya.cisapify.util.ResourceURIBuilder;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;

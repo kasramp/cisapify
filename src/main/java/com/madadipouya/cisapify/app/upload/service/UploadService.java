@@ -1,7 +1,7 @@
-package com.madadipouya.cisapify.user.upload.service;
+package com.madadipouya.cisapify.app.upload.service;
 
-import com.madadipouya.cisapify.user.upload.service.exception.StorageException;
-import com.madadipouya.cisapify.user.upload.service.exception.StorageFileNotFoundException;
+import com.madadipouya.cisapify.app.upload.service.exception.StorageException;
+import com.madadipouya.cisapify.app.upload.service.exception.StorageFileNotFoundException;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 

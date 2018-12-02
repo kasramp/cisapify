@@ -1,9 +1,9 @@
-package com.madadipouya.cisapify.user.player.controller;
+package com.madadipouya.cisapify.app.player.controller;
 
-import com.madadipouya.cisapify.user.song.service.SongService;
-import com.madadipouya.cisapify.user.upload.service.UploadService;
-import com.madadipouya.cisapify.user.upload.service.exception.StorageException;
-import com.madadipouya.cisapify.user.upload.service.exception.StorageFileNotFoundException;
+import com.madadipouya.cisapify.app.song.service.SongService;
+import com.madadipouya.cisapify.app.upload.service.UploadService;
+import com.madadipouya.cisapify.app.upload.service.exception.StorageException;
+import com.madadipouya.cisapify.app.upload.service.exception.StorageFileNotFoundException;
 import com.madadipouya.cisapify.util.ResourceURIBuilder;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -39,18 +39,18 @@ public class PlayerController {
     @GetMapping("/player_old")
     public String showOldPlayer(Map<String, Object> model) throws StorageException {
         model.put("songs", uploadService.loadAll().collect(Collectors.toMap(this::createSongsURI, songService::getDisplayName)));
-        return "user/player/player_old.html";
+        return "app/player/player_old.html";
     }
 
     @GetMapping("/player")
     public String showPlayer() {
-        return "user/player/player.html";
+        return "app/player/player.html";
     }
 
     @GetMapping("/play/{songName}")
     public String playSong(@PathVariable String songName, Map<String, Object> model) {
         model.put("file", resourceURIBuilder.withClearState().withMethodName("serveFile").withParameters(songName).build());
-        return "user/player/player_old.html";
+        return "app/player/player_old.html";
     }
 
     @GetMapping("/files/{filename:.+}")

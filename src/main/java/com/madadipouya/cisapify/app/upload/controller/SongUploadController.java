@@ -1,7 +1,7 @@
-package com.madadipouya.cisapify.user.upload.controller;
+package com.madadipouya.cisapify.app.upload.controller;
 
-import com.madadipouya.cisapify.user.upload.service.UploadService;
-import com.madadipouya.cisapify.user.upload.service.exception.StorageException;
+import com.madadipouya.cisapify.app.upload.service.UploadService;
+import com.madadipouya.cisapify.app.upload.service.exception.StorageException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +31,6 @@ public class SongUploadController {
 
     @GetMapping("/upload")
     public String showUploadForm() {
-        return "user/player/upload/song_upload";
+        return "app/player/upload/song_upload";
     }
 }

@@ -1,4 +1,4 @@
-package com.madadipouya.cisapify.user.cors;
+package com.madadipouya.cisapify.app.cors;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

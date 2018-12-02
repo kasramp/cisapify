@@ -1,6 +1,6 @@
-package com.madadipouya.cisapify.user.song.repository;
+package com.madadipouya.cisapify.app.song.repository;
 
-import com.madadipouya.cisapify.user.song.model.Song;
+import com.madadipouya.cisapify.app.song.model.Song;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

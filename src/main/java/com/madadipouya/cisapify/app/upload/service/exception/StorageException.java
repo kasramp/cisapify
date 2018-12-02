@@ -1,4 +1,4 @@
-package com.madadipouya.cisapify.user.upload.service.exception;
+package com.madadipouya.cisapify.app.upload.service.exception;
 
 public class StorageException extends Exception {
 

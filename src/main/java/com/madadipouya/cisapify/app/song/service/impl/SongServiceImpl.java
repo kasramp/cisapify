@@ -1,8 +1,8 @@
-package com.madadipouya.cisapify.user.song.service.impl;
+package com.madadipouya.cisapify.app.song.service.impl;
 
-import com.madadipouya.cisapify.user.song.model.Song;
-import com.madadipouya.cisapify.user.song.repository.SongRepository;
-import com.madadipouya.cisapify.user.song.service.SongService;
+import com.madadipouya.cisapify.app.song.model.Song;
+import com.madadipouya.cisapify.app.song.repository.SongRepository;
+import com.madadipouya.cisapify.app.song.service.SongService;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;

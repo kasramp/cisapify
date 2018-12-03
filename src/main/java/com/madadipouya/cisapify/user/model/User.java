@@ -1,9 +1,12 @@
 package com.madadipouya.cisapify.user.model;
 
+import com.madadipouya.cisapify.app.song.model.Song;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 @Entity
 @Table(name = "users",
@@ -29,6 +32,9 @@ public class User {
     @Size(max = 1024)
     private String password;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Song> songs;
+
     public User(String emailAddress, String password) {
         this.emailAddress = emailAddress;
         this.password = password;
@@ -42,19 +48,27 @@ public class User {
         return id;
     }
 
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getPassword() {
-        return password;
+    public Set<Song> getSongs() {
+        return songs;
+    }
+
+    public void setSongs(Set<Song> songs) {
+        this.songs = songs;
     }
 }

@@ -1,5 +1,7 @@
 package com.madadipouya.cisapify.app.song.model;
 
+import com.madadipouya.cisapify.user.model.User;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -32,6 +34,10 @@ public class Song {
     @NotBlank
     @Size(min = 16, max = 4096)
     private String uri;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Song() {
 
@@ -69,5 +75,13 @@ public class Song {
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

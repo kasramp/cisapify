@@ -66,21 +66,29 @@ CREATE TABLE IF NOT EXISTS visits (
 
 
 -- CISAPIFY
-CREATE TABLE songs (
-  id  INTEGER IDENTITY PRIMARY KEY,
-  display_name  VARCHAR(4096) NOT NULL,
-  file_name VARCHAR(128) NOT NULL,
-  uri VARCHAR(4096) NOT NULL,
-  CONSTRAINT uc_song_uri UNIQUE(uri),
-  CONSTRAINT uc_song_file_name UNIQUE(file_name)
-) engine=InnoDB;
-CREATE INDEX idx_song_file_name ON songs (file_name);
 
 CREATE TABLE users (
   id INTEGER IDENTITY PRIMARY KEY,
   email_address VARCHAR(512) NOT NULL,
   password VARCHAR(1024) NOT NULL,
   CONSTRAINT uc_user_email_address UNIQUE(email_address)
-);
+) engine=InnoDB;
 CREATE INDEX idx_user_email_address ON users (email_address);
+
+CREATE TABLE songs (
+  id INTEGER IDENTITY PRIMARY KEY,
+  display_name VARCHAR(4096) NOT NULL,
+  file_name VARCHAR(128) NOT NULL,
+  uri VARCHAR(4096) NOT NULL,
+  user_id INTEGER NOT NULL,
+
+  CONSTRAINT uc_song_uri UNIQUE(uri),
+  CONSTRAINT uc_song_file_name UNIQUE(file_name),
+  FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) engine=InnoDB;
+CREATE INDEX idx_song_file_name ON songs (file_name);
+
 -- END CISAPIFY

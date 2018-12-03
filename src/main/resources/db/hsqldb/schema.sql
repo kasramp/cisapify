@@ -65,17 +65,6 @@ CREATE INDEX visits_pet_id ON visits (pet_id);
 
 
 -- CISAPIFY
-DROP TABLE songs IF EXISTS;
-
-CREATE TABLE songs (
-  id INTEGER IDENTITY PRIMARY KEY,
-  display_name VARCHAR(4096) NOT NULL,
-  file_name VARCHAR(128) NOT NULL,
-  uri VARCHAR(4096) NOT NULL,
-  CONSTRAINT uc_song_uri UNIQUE(uri),
-  CONSTRAINT uc_song_file_name UNIQUE(file_name)
-);
-CREATE INDEX idx_song_file_name ON songs (file_name);
 
 DROP TABLE users IF EXISTS;
 
@@ -86,4 +75,23 @@ CREATE TABLE users (
   CONSTRAINT uc_user_email_address UNIQUE(email_address)
 );
 CREATE INDEX idx_user_email_address ON users (email_address);
+
+DROP TABLE songs IF EXISTS;
+
+CREATE TABLE songs (
+  id INTEGER IDENTITY PRIMARY KEY,
+  display_name VARCHAR(4096) NOT NULL,
+  file_name VARCHAR(128) NOT NULL,
+  uri VARCHAR(4096) NOT NULL,
+  user_id INTEGER NOT NULL,
+
+  CONSTRAINT uc_song_uri UNIQUE(uri),
+  CONSTRAINT uc_song_file_name UNIQUE(file_name),
+  FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+CREATE INDEX idx_song_file_name ON songs (file_name);
+
 -- END CISAPIFY

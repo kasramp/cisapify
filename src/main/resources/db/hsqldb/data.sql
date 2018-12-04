@@ -51,3 +51,16 @@ INSERT INTO visits VALUES (1, 7, '2013-01-01', 'rabies shot');
 INSERT INTO visits VALUES (2, 8, '2013-01-02', 'rabies shot');
 INSERT INTO visits VALUES (3, 8, '2013-01-03', 'neutered');
 INSERT INTO visits VALUES (4, 7, '2013-01-04', 'spayed');
+
+-- CISAPIFY START
+
+INSERT INTO users VALUES (1, 'john.wick@gmail.com', '1234');
+INSERT INTO users VALUES (2, 'test@gmail.com', '001');
+INSERT INTO users VALUES (3, 'mike.shinoda@gmail.com', 'password');
+INSERT INTO users VALUES (4, 'eminem@gmail.com', 'simple');
+
+INSERT INTO songs VALUES(1, 'not afraid.mp3', 'fec6f39e-f793-11e8-8eb2-f2801f1b9fd1.mp3', '/tmp/fec6f39e-f793-11e8-8eb2-f2801f1b9fd1.mp3', 1)
+INSERT INTO songs VALUES(2, 'plastic heart.mp3', 'fec6f628-f793-11e8-8eb2-f2801f1b9fd1.mp3', '/tmp/fec6f628-f793-11e8-8eb2-f2801f1b9fd1.mp3', 1)
+INSERT INTO songs VALUES(3, 'two for tragedy.mp3', 'fec6f7a4-f793-11e8-8eb2-f2801f1b9fd1.mp3', '/tmp/fec6f7a4-f793-11e8-8eb2-f2801f1b9fd1.mp3', 1)
+INSERT INTO songs VALUES(4, 'children.mp3', 'fec6fb78-f793-11e8-8eb2-f2801f1b9fd1.mp3', '/tmp/fec6fb78-f793-11e8-8eb2-f2801f1b9fd1.mp3', 4)
+-- CISAPIFY END

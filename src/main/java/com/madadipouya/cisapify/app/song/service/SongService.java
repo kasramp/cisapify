@@ -1,6 +1,8 @@
 package com.madadipouya.cisapify.app.song.service;
 
 import java.nio.file.Path;
+import java.util.List;
+
 import com.madadipouya.cisapify.app.song.model.Song;
 
 public interface SongService {
@@ -18,4 +20,11 @@ public interface SongService {
      * @return the persisted instance of {@link Song} with {@link Song#id}
      */
     Song save(Song song);
+
+    /**
+     * Retrieves a list of {@link Song} based on {@link com.madadipouya.cisapify.user.model.User#id}
+     * @param userId of a User
+     * @return list of Songs
+     */
+    List<Song> getByUserId(long userId);
 }

@@ -6,6 +6,7 @@ import com.madadipouya.cisapify.app.song.service.SongService;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
+import java.util.List;
 
 @Service
 public class SongServiceImpl implements SongService {
@@ -24,5 +25,10 @@ public class SongServiceImpl implements SongService {
     @Override
     public Song save(Song song) {
         return songRepository.save(song);
+    }
+
+    @Override
+    public List<Song> getByUserId(long userId) {
+        return songRepository.findByUserId(userId);
     }
 }

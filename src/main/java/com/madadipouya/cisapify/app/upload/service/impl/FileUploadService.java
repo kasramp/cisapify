@@ -97,10 +97,12 @@ public class FileUploadService implements UploadService {
     @Override
     public Stream<Path> loadAllForCurrentUser() {
         // TODO implement how to get the current User
-        Optional<User> userOptional = userService.getUserById(1L);
-        return userOptional.isPresent() ? userOptional.get().getSongs() : Set.of()
+        return userService.getUserById(1L)
+                .map(User::getSongs)
+                .orElse(Set.of())
                 .stream()
-                .map(song -> Paths.get(song.getUri()))
+                .map(Song::getUri)
+                .map(Paths::get)
                 .filter(Files::exists);
     }
 

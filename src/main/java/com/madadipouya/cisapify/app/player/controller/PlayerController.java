@@ -69,6 +69,14 @@ public class PlayerController {
                 ).collect(Collectors.toList()));
     }
 
+    @GetMapping(value = "/playlist_new", produces = "application/json")
+    public ResponseEntity<List<SongDto>> getPlayListNew() throws StorageException {
+        return ResponseEntity.ok(uploadService.loadAllForCurrentUser()
+                .map(path -> new SongDto(songService.getDisplayName(path),
+                        resourceURIBuilder.withClearState().withMethodName("serveFile").withPath(path).build())
+                ).collect(Collectors.toList()));
+    }
+
     private String createSongsURI(Path path) {
         return resourceURIBuilder.withClearState()
                 .withMethodName("playSong")

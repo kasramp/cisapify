@@ -5,6 +5,8 @@ import com.madadipouya.cisapify.app.song.service.SongService;
 import com.madadipouya.cisapify.app.upload.service.UploadService;
 import com.madadipouya.cisapify.app.upload.service.exception.StorageException;
 import com.madadipouya.cisapify.app.upload.service.exception.StorageFileNotFoundException;
+import com.madadipouya.cisapify.user.model.User;
+import com.madadipouya.cisapify.user.service.UserService;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RegExUtils;
 import org.springframework.core.io.Resource;
@@ -20,6 +22,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -32,8 +36,11 @@ public class FileUploadService implements UploadService {
 
     private final SongService songService;
 
-    public FileUploadService(SongService songService) {
+    private final UserService userService;
+
+    public FileUploadService(SongService songService, UserService userService) {
         this.songService = songService;
+        this.userService = userService;
         rootLocation = Paths.get(path);
     }
 
@@ -85,6 +92,16 @@ public class FileUploadService implements UploadService {
         } catch (IOException e) {
             throw new StorageException("Failed to read stored files", e);
         }
+    }
+
+    @Override
+    public Stream<Path> loadAllForCurrentUser() {
+        // TODO implement how to get the current User
+        Optional<User> userOptional = userService.getUserById(1L);
+        return userOptional.isPresent() ? userOptional.get().getSongs() : Set.of()
+                .stream()
+                .map(song -> Paths.get(song.getUri()))
+                .filter(Files::exists);
     }
 
     private Path loadPath(String fileName) {

@@ -15,4 +15,6 @@ public interface UploadService {
     Resource load(String fileName) throws StorageFileNotFoundException;
 
     Stream<Path> loadAll() throws StorageException;
+
+    Stream<Path> loadAllForCurrentUser();
 }

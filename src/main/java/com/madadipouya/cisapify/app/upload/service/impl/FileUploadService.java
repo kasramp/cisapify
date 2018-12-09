@@ -62,7 +62,7 @@ public class FileUploadService implements UploadService {
                 Files.copy(inputStream, fileFullPath, StandardCopyOption.REPLACE_EXISTING);
                 songService.save(Song.Builder().withDisplayName(displayName).withFileName(storedFileName)
                         .withUri(fileFullPath.toString())
-                        .withUser(userService.getUserById(1L).get())
+                        .withUser(userService.getUserById(1L).get()) // TODO replace with a real user
                         .build());
             }
         } catch (IOException e) {

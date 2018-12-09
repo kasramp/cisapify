@@ -22,7 +22,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -61,7 +60,10 @@ public class FileUploadService implements UploadService {
             try (InputStream inputStream = file.getInputStream()) {
                 Path fileFullPath = rootLocation.resolve(storedFileName);
                 Files.copy(inputStream, fileFullPath, StandardCopyOption.REPLACE_EXISTING);
-                songService.save(new Song(displayName, storedFileName, fileFullPath.toString()));
+                songService.save(Song.Builder().withDisplayName(displayName).withFileName(storedFileName)
+                        .withUri(fileFullPath.toString())
+                        .withUser(userService.getUserById(1L).get())
+                        .build());
             }
         } catch (IOException e) {
             throw new StorageException(String.format("Failed to store file %s", displayName), e);

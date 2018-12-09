@@ -39,16 +39,6 @@ public class Song {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Song() {
-
-    }
-
-    public Song(String displayName, String fileName, String uri) {
-        this.fileName = fileName;
-        this.displayName = displayName;
-        this.uri = uri;
-    }
-
     public long getId() {
         return id;
     }
@@ -83,5 +73,42 @@ public class Song {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public static SongBuilder Builder() {
+        return new SongBuilder();
+    }
+
+    public static class SongBuilder {
+
+        private Song song;
+
+        private SongBuilder() {
+            song = new Song();
+        }
+
+        public SongBuilder withDisplayName(String displayName) {
+            song.setDisplayName(displayName);
+            return this;
+        }
+
+        public SongBuilder withFileName(String fileName) {
+            song.setFileName(fileName);
+            return this;
+        }
+
+        public SongBuilder withUri(String uri) {
+            song.setUri(uri);
+            return this;
+        }
+
+        public SongBuilder withUser(User user) {
+            song.setUser(user);
+            return this;
+        }
+
+        public Song build() {
+            return song;
+        }
     }
 }

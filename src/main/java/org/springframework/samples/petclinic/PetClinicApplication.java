@@ -16,17 +16,24 @@
 
 package org.springframework.samples.petclinic;
 
+import com.madadipouya.cisapify.user.model.User;
+import com.madadipouya.cisapify.user.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.stereotype.Component;
+
+import java.util.Set;
 
 /**
  * PetClinic Spring Boot Application.
  *
  * @author Dave Syer
- *
  */
 @SpringBootApplication
 @ComponentScan("com.madadipouya.cisapify")
@@ -38,4 +45,22 @@ public class PetClinicApplication {
         SpringApplication.run(PetClinicApplication.class, args);
     }
 
+    @Component
+    public class DataLoader implements ApplicationRunner {
+
+        private UserService userService;
+
+        @Autowired
+        public DataLoader(UserService userService) {
+            this.userService = userService;
+        }
+
+        public void run(ApplicationArguments args) {
+            User user = new User();
+            user.setPassword("12345");
+            user.setEmailAddress("kasra@madadipouya.com");
+            user.setSongs(Set.of());
+            userService.save(user);
+        }
+    }
 }

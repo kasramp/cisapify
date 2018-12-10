@@ -3,6 +3,7 @@ package com.madadipouya.cisapify.user.service.impl;
 import com.madadipouya.cisapify.user.model.User;
 import com.madadipouya.cisapify.user.repository.UserRepository;
 import com.madadipouya.cisapify.user.service.UserService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,8 +13,11 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     public Optional<User> getUserById(long id) {
@@ -25,6 +29,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public User save(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 }

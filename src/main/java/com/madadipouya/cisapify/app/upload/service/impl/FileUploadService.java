@@ -11,6 +11,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RegExUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +25,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -44,7 +46,8 @@ public class FileUploadService implements UploadService {
     }
 
     @Override
-    public void store(MultipartFile file) throws StorageException {
+    public void store(MultipartFile file, String emailAddress) throws StorageException {
+        User user = userService.getUserByEmailAddress(emailAddress).orElseThrow(() -> new UsernameNotFoundException("Couldn't find user"));
         String displayName = RegExUtils.replaceAll(StringUtils.cleanPath(file.getOriginalFilename()), "#", "");
 
         String storedFileName = String.format("%s.%s", UUID.randomUUID().toString(), FilenameUtils.getExtension(displayName));
@@ -62,7 +65,7 @@ public class FileUploadService implements UploadService {
                 Files.copy(inputStream, fileFullPath, StandardCopyOption.REPLACE_EXISTING);
                 songService.save(Song.Builder().withDisplayName(displayName).withFileName(storedFileName)
                         .withUri(fileFullPath.toString())
-                        .withUser(userService.getUserById(1L).get()) // TODO replace with a real user
+                        .withUser(user)
                         .build());
             }
         } catch (IOException e) {
@@ -97,15 +100,10 @@ public class FileUploadService implements UploadService {
     }
 
     @Override
-    public Stream<Path> loadAllForCurrentUser() {
-        // TODO implement how to get the current User
-        return userService.getUserById(1L)
-                .map(User::getSongs)
-                .orElse(Set.of())
-                .stream()
-                .map(Song::getUri)
-                .map(Paths::get)
-                .filter(Files::exists);
+    public Set<Song> loadAllForUserEmail(String emailAddress) {
+        User user = userService.getUserByEmailAddress(emailAddress)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("Can't retrieve User details for %s email", emailAddress)));
+        return user.getSongs().stream().filter(song -> Files.exists(Paths.get(song.getUri()))).collect(Collectors.toSet());
     }
 
     private Path loadPath(String fileName) {

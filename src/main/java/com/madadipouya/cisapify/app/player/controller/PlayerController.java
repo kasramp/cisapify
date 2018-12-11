@@ -8,6 +8,7 @@ import com.madadipouya.cisapify.util.ResourceURIBuilder;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.net.URLDecoder;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -62,19 +64,10 @@ public class PlayerController {
     }
 
     @GetMapping(value = "/playlist", produces = "application/json")
-    public ResponseEntity<List<SongDto>> getPlayList() throws StorageException {
-        return ResponseEntity.ok(uploadService.loadAll()
-                .map(path -> new SongDto(songService.getDisplayName(path),
-                        resourceURIBuilder.withClearState().withMethodName("serveFile").withPath(path).build())
-                ).collect(Collectors.toList()));
-    }
-
-    @GetMapping(value = "/playlist_new", produces = "application/json")
-    public ResponseEntity<List<SongDto>> getPlayListNew() throws StorageException {
-        return ResponseEntity.ok(uploadService.loadAllForCurrentUser()
-                .map(path -> new SongDto(songService.getDisplayName(path),
-                        resourceURIBuilder.withClearState().withMethodName("serveFile").withPath(path).build())
-                ).collect(Collectors.toList()));
+    public ResponseEntity<List<SongDto>> getPlayListNew(Authentication authentication) {
+        return ResponseEntity.ok(uploadService.loadAllForUserEmail(authentication.getName()).stream().map(song -> new SongDto(song.getDisplayName(),
+                resourceURIBuilder.withClearState().withMethodName("serveFile").withPath(Paths.get(song.getUri())).build())
+        ).collect(Collectors.toList()));
     }
 
     private String createSongsURI(Path path) {

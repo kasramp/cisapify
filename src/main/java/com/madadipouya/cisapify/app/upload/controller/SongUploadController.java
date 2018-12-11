@@ -2,6 +2,7 @@ package com.madadipouya.cisapify.app.upload.controller;
 
 import com.madadipouya.cisapify.app.upload.service.UploadService;
 import com.madadipouya.cisapify.app.upload.service.exception.StorageException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,9 +20,9 @@ public class SongUploadController {
     }
 
     @PostMapping("/upload")
-    public String doUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) throws StorageException {
+    public String doUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes, Authentication authentication) throws StorageException {
 
-        uploadService.store(file);
+        uploadService.store(file, authentication.getName());
 
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");

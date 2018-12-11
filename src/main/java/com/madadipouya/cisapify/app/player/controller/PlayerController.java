@@ -64,7 +64,7 @@ public class PlayerController {
     }
 
     @GetMapping(value = "/playlist", produces = "application/json")
-    public ResponseEntity<List<SongDto>> getPlayListNew(Authentication authentication) {
+    public ResponseEntity<List<SongDto>> getPlayList(Authentication authentication) {
         return ResponseEntity.ok(uploadService.loadAllForUserEmail(authentication.getName()).stream().map(song -> new SongDto(song.getDisplayName(),
                 resourceURIBuilder.withClearState().withMethodName("serveFile").withPath(Paths.get(song.getUri())).build())
         ).collect(Collectors.toList()));

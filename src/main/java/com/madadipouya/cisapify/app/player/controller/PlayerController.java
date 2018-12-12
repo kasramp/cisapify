@@ -1,6 +1,6 @@
 package com.madadipouya.cisapify.app.player.controller;
 
-import com.madadipouya.cisapify.app.song.service.SongService;
+import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.app.upload.service.UploadService;
 import com.madadipouya.cisapify.app.upload.service.exception.StorageException;
 import com.madadipouya.cisapify.app.upload.service.exception.StorageFileNotFoundException;
@@ -30,17 +30,15 @@ public class PlayerController {
 
     private final ResourceURIBuilder resourceURIBuilder;
 
-    private final SongService songService;
-
-    public PlayerController(UploadService uploadService, SongService songService) {
+    public PlayerController(UploadService uploadService) {
         this.uploadService = uploadService;
-        this.songService = songService;
         this.resourceURIBuilder = new ResourceURIBuilder(PlayerController.class);
     }
 
     @GetMapping("/player_old")
-    public String showOldPlayer(Map<String, Object> model) throws StorageException {
-        model.put("songs", uploadService.loadAll().collect(Collectors.toMap(this::createSongsURI, songService::getDisplayName)));
+    public String showOldPlayer(Map<String, Object> model, Authentication authentication) throws StorageException {
+        model.put("songs", uploadService.loadAllForUserEmail(authentication.getName()).stream()
+                .collect(Collectors.toMap(song -> createSongsURI(Paths.get(song.getUri())), Song::getDisplayName)));
         return "app/player/player_old.html";
     }
 

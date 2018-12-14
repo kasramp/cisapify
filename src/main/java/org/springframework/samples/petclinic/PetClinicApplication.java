@@ -60,6 +60,7 @@ public class PetClinicApplication {
             user.setPassword("12345");
             user.setEmailAddress("kasra@madadipouya.com");
             user.setSongs(Set.of());
+            user.setEnabled(true);
             userService.save(user);
         }
     }

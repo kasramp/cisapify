@@ -32,17 +32,11 @@ public class User {
     @Size(max = 1024)
     private String password;
 
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Song> songs;
-
-    public User(String emailAddress, String password) {
-        this.emailAddress = emailAddress;
-        this.password = password;
-    }
-
-    public User() {
-
-    }
 
     public long getId() {
         return id;
@@ -62,6 +56,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public Set<Song> getSongs() {

@@ -42,7 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return emailAddress -> {
             com.madadipouya.cisapify.user.model.User user = userRepository.getByEmailAddress(emailAddress)
                     .orElseThrow(() -> new UsernameNotFoundException("could not find the user"));
-            return new User(user.getEmailAddress(), user.getPassword(), true, true, true, true, AuthorityUtils.createAuthorityList("USER"));
+            return new User(user.getEmailAddress(), user.getPassword(), user.isEnabled(), true, true, true, AuthorityUtils.createAuthorityList("USER"));
         };
     }
 

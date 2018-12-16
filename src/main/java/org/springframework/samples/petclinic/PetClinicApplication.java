@@ -16,7 +16,9 @@
 
 package org.springframework.samples.petclinic;
 
+import com.madadipouya.cisapify.user.model.Role;
 import com.madadipouya.cisapify.user.model.User;
+import com.madadipouya.cisapify.user.repository.RoleRepository;
 import com.madadipouya.cisapify.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -50,18 +52,27 @@ public class PetClinicApplication {
 
         private UserService userService;
 
+        private RoleRepository roleRepository;
+
         @Autowired
-        public DataLoader(UserService userService) {
+        public DataLoader(UserService userService, RoleRepository roleRepository) {
             this.userService = userService;
+            this.roleRepository = roleRepository;
         }
 
         public void run(ApplicationArguments args) {
+            Role role = new Role();
+            role.setRole("ADMIN");
+
             User user = new User();
             user.setPassword("12345");
             user.setEmailAddress("kasra@madadipouya.com");
             user.setSongs(Set.of());
             user.setEnabled(true);
+            user.setRoles(Set.of(role));
             userService.save(user);
+
+            roleRepository.findAll();
         }
     }
 }

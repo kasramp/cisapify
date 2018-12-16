@@ -1,5 +1,6 @@
 package com.madadipouya.cisapify.user.config;
 
+import com.madadipouya.cisapify.user.model.Role;
 import com.madadipouya.cisapify.user.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +43,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return emailAddress -> {
             com.madadipouya.cisapify.user.model.User user = userRepository.getByEmailAddress(emailAddress)
                     .orElseThrow(() -> new UsernameNotFoundException("could not find the user"));
-            return new User(user.getEmailAddress(), user.getPassword(), user.isEnabled(), true, true, true, AuthorityUtils.createAuthorityList("USER"));
+
+            return new User(user.getEmailAddress(), user.getPassword(), user.isEnabled(), true, true, true,
+                    AuthorityUtils.createAuthorityList(user.getRoles().stream().map(Role::getRole).toArray(String[]::new)));
         };
     }
 

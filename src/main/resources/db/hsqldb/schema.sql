@@ -95,4 +95,21 @@ CREATE TABLE songs (
 );
 CREATE INDEX idx_song_file_name ON songs (file_name);
 
+CREATE TABLE roles (
+  id INTEGER IDENTITY PRIMARY KEY,
+  role VARCHAR(128) NOT NULL,
+
+  CONSTRAINT uc_role_role_name UNIQUE (role)
+);
+CREATE INDEX idx_role_role_name on roles (role);
+
+CREATE TABLE user_role (
+  user_id INTEGER NOT NULL,
+  role_id INTEGER NOT NULL,
+  PRIMARY KEY (user_id, role_id),
+
+  CONSTRAINT fk_user_role_user_id FOREIGN KEY (user_id) REFERENCES users (id),
+  CONSTRAINT fk_user_role_role_id FOREIGN KEY (role_id) REFERENCES roles (id)
+);
+
 -- END CISAPIFY

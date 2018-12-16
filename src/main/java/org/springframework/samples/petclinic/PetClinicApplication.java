@@ -61,18 +61,27 @@ public class PetClinicApplication {
         }
 
         public void run(ApplicationArguments args) {
-            Role role = new Role();
-            role.setRole("ADMIN");
+            Role adminRole = new Role();
+            adminRole.setRole("ADMIN");
+
+            Role userRole = new Role();
+            userRole.setRole("USER");
 
             User user = new User();
             user.setPassword("12345");
             user.setEmailAddress("kasra@madadipouya.com");
             user.setSongs(Set.of());
             user.setEnabled(true);
-            user.setRoles(Set.of(role));
+            user.setRoles(Set.of(adminRole));
             userService.save(user);
 
-            roleRepository.findAll();
+            User testUser = new User();
+            testUser.setPassword("password");
+            testUser.setEmailAddress("test@test.com");
+            testUser.setEnabled(true);
+            testUser.setSongs(Set.of());
+            testUser.setRoles(Set.of(userRole));
+            userService.save(testUser);
         }
     }
 }

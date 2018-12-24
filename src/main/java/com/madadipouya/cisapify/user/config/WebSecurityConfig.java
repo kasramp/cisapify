@@ -30,7 +30,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/player/**", "/upload/**", "/player_old/**", "/play/**", "/files/**",
                         "/playlist/**").hasAnyAuthority("ADMIN", "USER")
                 .and()
-                .formLogin();
+                .formLogin().loginPage("/login")
+                .defaultSuccessUrl("/welcome");
     }
 
     @Bean

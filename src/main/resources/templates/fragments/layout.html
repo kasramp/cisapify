@@ -35,11 +35,16 @@
         </ul>
     </div>
     <form class="form-inline my-2 my-lg-0">
-        <div th:switch="${#authentication}? ${#authorization.expression('isAuthenticated()')} : ${false}">
-            <a th:case="${false}" class="btn btn-outline-success my-2 my-sm-0" href="/login">Login</a>
-            <a th:case="${true}" class="btn btn-outline-success my-2 my-sm-0" href="/login">HIs</a>
+        <div th:switch="${#authentication}? ${#authorization.expression('isAuthenticated()')} : ${true}">
+            <a th:case="${false}" class="btn btn-outline-success my-2 my-sm-0" th:href="@{/login}">Login</a>
+            <button th:case="${true}" th:text="${#authentication.getName()}"
+                    class="btn btn-outline-success" type="button" id="profileMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            </button>
+            <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="profileMenuButton">
+                <a class="dropdown-item" href="#">Profile</a>
+                <a class="dropdown-item" th:href="@{/logout}">Log Out</a>
+            </div>
         </div>
-        <!--<span th:text ="${#authentication.getPrincipal().getUser().getFirstName()}"></span>-->
     </form>
 </nav>
 

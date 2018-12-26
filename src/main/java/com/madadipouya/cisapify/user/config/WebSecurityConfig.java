@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -31,7 +32,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/playlist/**").hasAnyAuthority("ADMIN", "USER")
                 .and()
                 .formLogin().loginPage("/login")
-                .defaultSuccessUrl("/welcome");
+                .defaultSuccessUrl("/welcome")
+                .and()
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/login?logout")
+                .clearAuthentication(true)
+                .deleteCookies("JSESSIONID")
+                .invalidateHttpSession(true);
     }
 
     @Bean

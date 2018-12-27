@@ -2,7 +2,6 @@ package com.madadipouya.cisapify.app.player.controller;
 
 import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.app.upload.service.UploadService;
-import com.madadipouya.cisapify.app.upload.service.exception.StorageException;
 import com.madadipouya.cisapify.app.upload.service.exception.StorageFileNotFoundException;
 import com.madadipouya.cisapify.util.ResourceURIBuilder;
 import org.springframework.core.io.Resource;
@@ -36,7 +35,7 @@ public class PlayerController {
     }
 
     @GetMapping("/player_old")
-    public String showOldPlayer(Map<String, Object> model, Authentication authentication) throws StorageException {
+    public String showOldPlayer(Map<String, Object> model, Authentication authentication) {
         model.put("songs", uploadService.loadAllForUserEmail(authentication.getName()).stream()
                 .collect(Collectors.toMap(song -> createSongsURI(Paths.get(song.getUri())), Song::getDisplayName)));
         return "app/player/player_old.html";

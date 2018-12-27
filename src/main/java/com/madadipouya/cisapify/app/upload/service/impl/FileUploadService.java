@@ -5,6 +5,7 @@ import com.madadipouya.cisapify.app.song.service.SongService;
 import com.madadipouya.cisapify.app.upload.service.UploadService;
 import com.madadipouya.cisapify.app.upload.service.exception.StorageException;
 import com.madadipouya.cisapify.app.upload.service.exception.StorageFileNotFoundException;
+import com.madadipouya.cisapify.i18n.service.I18nService;
 import com.madadipouya.cisapify.user.model.User;
 import com.madadipouya.cisapify.user.service.UserService;
 import org.apache.commons.io.FilenameUtils;
@@ -39,26 +40,29 @@ public class FileUploadService implements UploadService {
 
     private final UserService userService;
 
-    public FileUploadService(SongService songService, UserService userService) {
+    private final I18nService i18nService;
+
+    public FileUploadService(SongService songService, UserService userService, I18nService i18nService) {
         this.songService = songService;
         this.userService = userService;
+        this.i18nService = i18nService;
         rootLocation = Paths.get(path);
     }
 
     @Override
     public void store(MultipartFile file, String emailAddress) throws StorageException {
-        User user = userService.getUserByEmailAddress(emailAddress).orElseThrow(() -> new UsernameNotFoundException("Couldn't find user"));
+        User user = userService.getUserByEmailAddress(emailAddress).orElseThrow(() -> new UsernameNotFoundException(i18nService.getMessage("upload.service.userNotFound")));
         String displayName = RegExUtils.replaceAll(StringUtils.cleanPath(file.getOriginalFilename()), "#", "");
 
         String storedFileName = String.format("%s.%s", UUID.randomUUID().toString(), FilenameUtils.getExtension(displayName));
 
         try {
             if (file.isEmpty()) {
-                throw new StorageException(String.format("Failed to store empty file %s", displayName));
+                throw new StorageException(i18nService.getMessage("upload.service.failStoreEmptyFile", displayName));
             }
             if (displayName.contains("..")) {
                 // This is a security check
-                throw new StorageException(String.format("Cannot store file with relative path outside current directory %s", displayName));
+                throw new StorageException(i18nService.getMessage("upload.service.fileStoreWithOutsideRelativePath", displayName));
             }
             try (InputStream inputStream = file.getInputStream()) {
                 Path fileFullPath = rootLocation.resolve(storedFileName);
@@ -69,7 +73,8 @@ public class FileUploadService implements UploadService {
                         .build());
             }
         } catch (IOException e) {
-            throw new StorageException(String.format("Failed to store file %s", displayName), e);
+
+            throw new StorageException(i18nService.getMessage("upload.service.failToStoreFile", displayName), e);
         }
     }
 
@@ -81,10 +86,10 @@ public class FileUploadService implements UploadService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new StorageFileNotFoundException(String.format("Could not read file: %s", filename));
+                throw new StorageFileNotFoundException(i18nService.getMessage("upload.service.fileNotFound", filename));
             }
         } catch (MalformedURLException e) {
-            throw new StorageFileNotFoundException(String.format("Could not read file: %s", filename), e);
+            throw new StorageFileNotFoundException(i18nService.getMessage("upload.service.fileNotFound", filename), e);
         }
     }
 
@@ -95,14 +100,14 @@ public class FileUploadService implements UploadService {
                     .filter(path -> !path.equals(rootLocation) && path.getFileName().toString().endsWith(".mp3"))
                     .map(rootLocation::relativize);
         } catch (IOException e) {
-            throw new StorageException("Failed to read stored files", e);
+            throw new StorageException(i18nService.getMessage("upload.service.failToReadFiles"), e);
         }
     }
 
     @Override
     public Set<Song> loadAllForUserEmail(String emailAddress) {
         User user = userService.getUserByEmailAddress(emailAddress)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format("Can't retrieve User details for %s email", emailAddress)));
+                .orElseThrow(() -> new UsernameNotFoundException(i18nService.getMessage("upload.service.userDetailsNotFound", emailAddress)));
         return user.getSongs().stream().filter(song -> Files.exists(Paths.get(song.getUri()))).collect(Collectors.toSet());
     }
 

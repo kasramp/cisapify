@@ -1,5 +1,5 @@
 <!doctype html>
-<html th:fragment="layout (template, menu)" xml:lang="en">
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout (template, menu)" xml:lang="en">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
-    <title>Cisapify</title>
+    <title th:text="#{cisapify}"></title>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Cisapify</a>
+    <a class="navbar-brand" th:text="#{cisapify}" href="#"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -21,16 +21,16 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a>
+                <a class="nav-link" th:text="#{welcome}" href="#"><span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Features</a>
+                <a class="nav-link" th:text="#{features}" href="#"></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Pricing</a>
+                <a class="nav-link" th:text="#{pricing}" href="#"></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
+                <a class="nav-link disabled" th:text="#{disabled}" href="#"></a>
             </li>
         </ul>
     </div>
@@ -41,8 +41,8 @@
                     class="btn btn-outline-success" type="button" id="profileMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             </button>
             <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="profileMenuButton">
-                <a class="dropdown-item" href="#">Profile</a>
-                <a class="dropdown-item" th:href="@{/logout}">Log Out</a>
+                <a class="dropdown-item" th:text="#{profile}" href="#"></a>
+                <a class="dropdown-item" th:text="#{logout}" th:href="@{/logout}"></a>
             </div>
         </div>
     </form>
@@ -53,7 +53,7 @@
         <th:block th:include="${template}"/>
     </div>
     <div class="navbar navbar-expand-lg fixed-bottom navbar-dark bg-dark">
-        <span class="navbar-text">© 2018 Cisapify</span>
+        <span class="navbar-text" th:text="#{copyright}"></span>
     </div>
 </div>
 <!-- Optional JavaScript -->

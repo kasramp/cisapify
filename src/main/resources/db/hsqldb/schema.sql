@@ -112,4 +112,23 @@ CREATE TABLE user_role (
   CONSTRAINT fk_user_role_role_id FOREIGN KEY (role_id) REFERENCES roles (id)
 );
 
+CREATE TABLE playlists (
+  id INTEGER IDENTITY PRIMARY KEY,
+  name VARCHAR(4096) NOT NULL,
+  user_id INTEGER NOT NULL,
+
+  CONSTRAINT uc_playlist_name UNIQUE(name),
+  FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE playlist_song (
+  playlist_id INTEGER NOT NULL,
+  song_id INTEGER NOT NULL,
+
+  CONSTRAINT fk_playlist_song_playlist_id FOREIGN KEY (playlist_id) REFERENCES playlists (id),
+  CONSTRAINT fk_playlist_song_song_id FOREIGN KEY (song_id) REFERENCES songs (id)
+);
 -- END CISAPIFY

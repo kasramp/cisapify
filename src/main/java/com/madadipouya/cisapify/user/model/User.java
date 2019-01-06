@@ -1,5 +1,6 @@
 package com.madadipouya.cisapify.user.model;
 
+import com.madadipouya.cisapify.app.playlist.model.Playlist;
 import com.madadipouya.cisapify.app.song.model.Song;
 
 import javax.persistence.*;
@@ -37,6 +38,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Song> songs;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Playlist> playlists;
 
     @ManyToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -76,6 +80,14 @@ public class User {
 
     public void setSongs(Set<Song> songs) {
         this.songs = songs;
+    }
+
+    public Set<Playlist> getPlaylists() {
+        return playlists;
+    }
+
+    public void setPlaylists(Set<Playlist> playlists) {
+        this.playlists = playlists;
     }
 
     public Set<Role> getRoles() {

@@ -7,11 +7,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@RequestMapping("/user")
 public class SongUploadController {
 
     private final UploadService uploadService;
@@ -27,7 +29,7 @@ public class SongUploadController {
     public String doUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes, Authentication authentication) throws StorageException {
         uploadService.store(file, authentication.getName());
         redirectAttributes.addFlashAttribute("message", i18nService.getMessage("upload.controller.successFileUpload", file.getOriginalFilename()));
-        return "redirect:/upload";
+        return "redirect:/user/upload";
     }
 
     @GetMapping("/upload")

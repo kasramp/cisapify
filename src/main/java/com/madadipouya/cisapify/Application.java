@@ -20,10 +20,10 @@ import java.util.Set;
 @ComponentScan("com.madadipouya.cisapify")
 @EnableJpaRepositories("com.madadipouya.cisapify")
 @EntityScan("com.madadipouya.cisapify")
-public class PetClinicApplication {
+public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(PetClinicApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
     @Component

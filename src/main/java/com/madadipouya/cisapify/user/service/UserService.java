@@ -15,6 +15,12 @@ public interface UserService {
     Optional<User> getUserById(long id);
 
     /**
+     * Retrieves Logged in User
+     * @return {@link Optional<User>} if the user is logged in, {@link Optional#EMPTY} otherwise
+     */
+    Optional<User> getLoggedInUser();
+
+    /**
      * Retrieves a User by email address
      *
      * @param emailAddress of a User

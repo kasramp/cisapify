@@ -8,12 +8,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static org.springframework.security.core.context.SecurityContextHolder.getContext;
+
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
@@ -22,6 +25,10 @@ public class UserServiceImpl implements UserService {
 
     public Optional<User> getUserById(long id) {
         return userRepository.findById(id);
+    }
+
+    public Optional<User> getLoggedInUser() {
+        return getUserByEmailAddress(getContext().getAuthentication().getName());
     }
 
     public Optional<User> getUserByEmailAddress(String emailAddress) {

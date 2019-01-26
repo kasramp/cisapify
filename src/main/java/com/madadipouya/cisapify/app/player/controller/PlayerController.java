@@ -79,31 +79,24 @@ public class PlayerController {
 
     public static class SongDto {
 
-        private String title;
+        private final String title;
 
-        private String file;
+        private final String file;
 
-        private String howl = null;
+        private final String howl;
 
         public SongDto(String title, String file) {
             this.title = title;
             this.file = file;
+            howl = null;
         }
 
         public String getTitle() {
             return title;
         }
 
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
         public String getFile() {
             return file;
-        }
-
-        public void setFile(String file) {
-            this.file = file;
         }
 
         public String getHowl() {

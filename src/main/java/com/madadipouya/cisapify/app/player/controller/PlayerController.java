@@ -62,7 +62,7 @@ public class PlayerController {
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
-    @GetMapping(value = "/playlist", produces = "application/json")
+    @GetMapping(value = "/songs", produces = "application/json")
     public ResponseEntity<List<SongDto>> getPlayList(Authentication authentication) {
         return ResponseEntity.ok(uploadService.loadAllForUserEmail(authentication.getName()).stream().map(song -> new SongDto(song.getDisplayName(),
                 resourceURIBuilder.withClearState().withMethodName("serveFile").withPath(Paths.get(song.getUri())).build())

@@ -24,18 +24,24 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public void create(Set<Song> songs, User user) {
+    public void create(String playlistName, Set<Song> songs, User user) {
         Playlist playlist = new Playlist();
+        playlist.setName(playlistName);
         playlist.setSongs(songs);
         playlist.setUser(user);
         playlistRepository.save(playlist);
     }
 
     @Override
-    public void create(Set<Song> songs) throws AnonymousUserPlaylistCreationException {
+    public void create(String playlistName, Set<Song> songs) throws AnonymousUserPlaylistCreationException {
         User user = userService.getLoggedInUser()
                 .orElseThrow(() -> new AnonymousUserPlaylistCreationException("Unable to create playlist for anonymous user"));
-        create(songs, user);
+        create(playlistName, songs, user);
+    }
+
+    @Override
+    public void create(Playlist playList) {
+        playlistRepository.save(playList);
     }
 
     @Override

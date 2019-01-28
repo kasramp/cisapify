@@ -10,7 +10,7 @@
 
 // Cache references to DOM elements.
 
-fetch('/user/playlist')
+fetch('/user/songs')
 .then(function(response) {
 	return response.json();
 }).then(function(songs) {

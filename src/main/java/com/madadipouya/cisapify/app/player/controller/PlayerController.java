@@ -1,5 +1,6 @@
 package com.madadipouya.cisapify.app.player.controller;
 
+import com.madadipouya.cisapify.app.playlist.service.PlaylistService;
 import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.app.upload.service.UploadService;
 import com.madadipouya.cisapify.app.upload.service.exception.StorageFileNotFoundException;
@@ -9,10 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URLDecoder;
 import java.nio.file.Path;
@@ -29,10 +27,13 @@ public class PlayerController {
 
     private final UploadService uploadService;
 
+    private final PlaylistService playlistService;
+
     private final ResourceURIBuilder resourceURIBuilder;
 
-    public PlayerController(UploadService uploadService) {
+    public PlayerController(UploadService uploadService, PlaylistService playlistService) {
         this.uploadService = uploadService;
+        this.playlistService = playlistService;
         this.resourceURIBuilder = new ResourceURIBuilder(PlayerController.class);
     }
 
@@ -44,7 +45,14 @@ public class PlayerController {
     }
 
     @GetMapping("/player")
-    public String showPlayer() {
+    public String showPlayer(@RequestParam(value = "playlist", required = false, defaultValue = "-1") long playlist,
+                             Map<String, Object> model) {
+        if(playlist >= 0) {
+            model.put("songsList", String.format("/user/songs/playlist/%s", playlist));
+        } else {
+            model.put("songsList", "/user/songs");
+        }
+
         return "app/player/player.html";
     }
 
@@ -67,6 +75,15 @@ public class PlayerController {
         return ResponseEntity.ok(uploadService.loadAllForUserEmail(authentication.getName()).stream().map(song -> new SongDto(song.getDisplayName(),
                 resourceURIBuilder.withClearState().withMethodName("serveFile").withPath(Paths.get(song.getUri())).build())
         ).collect(Collectors.toList()));
+    }
+
+
+    // TODO clean up, remove code duplication
+    @GetMapping(value = "/songs/playlist/{playlistId}", produces = "application/json")
+    public ResponseEntity<List<SongDto>> getSongsForPlaylist(Authentication authentication, @PathVariable long playlistId) {
+        return ResponseEntity.ok(playlistService.getSongs(playlistId).stream().map(song ->
+            new SongDto(song.getDisplayName(), resourceURIBuilder.withClearState()
+            .withMethodName("serveFile").withPath(Paths.get(song.getUri())).build())).collect(Collectors.toList()));
     }
 
     private String createSongsURI(Path path) {

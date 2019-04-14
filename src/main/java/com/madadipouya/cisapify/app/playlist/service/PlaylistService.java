@@ -17,7 +17,9 @@ public interface PlaylistService {
 
     Set<Playlist> getPlaylist(User user);
 
-    void delete(Long playlistId);
+    Set<Song> getSongs(long playlistId);
+
+    void delete(long playlistId);
 
     void update(Playlist playList);
 }

@@ -49,8 +49,14 @@ public class PlaylistServiceImpl implements PlaylistService {
         return playlistRepository.getByUser(user);
     }
 
+    // TODO throw proper exception
     @Override
-    public void delete(Long playlistId) {
+    public Set<Song> getSongs(long playlistId) {
+        return playlistRepository.findById(playlistId).orElseThrow(() -> new RuntimeException("ddd")).getSongs();
+    }
+
+    @Override
+    public void delete(long playlistId) {
         playlistRepository.deleteById(playlistId);
     }
 

@@ -1,6 +1,7 @@
 package com.madadipouya.cisapify.app.playlist.service.impl;
 
 import com.madadipouya.cisapify.app.playlist.exception.AnonymousUserPlaylistCreationException;
+import com.madadipouya.cisapify.app.playlist.exception.PlaylistNotExistException;
 import com.madadipouya.cisapify.app.playlist.model.Playlist;
 import com.madadipouya.cisapify.app.playlist.repository.PlaylistRepository;
 import com.madadipouya.cisapify.app.playlist.service.PlaylistService;
@@ -49,10 +50,18 @@ public class PlaylistServiceImpl implements PlaylistService {
         return playlistRepository.getByUser(user);
     }
 
-    // TODO throw proper exception
+    /*
+     Get playlists via User Service to ensure other users won't
+     be able to get songs of each other by passing random playlist
+      */
     @Override
-    public Set<Song> getSongs(long playlistId) {
-        return playlistRepository.findById(playlistId).orElseThrow(() -> new RuntimeException("ddd")).getSongs();
+    public Set<Song> getSongs(long playlistId) throws PlaylistNotExistException {
+        return getPlaylist(userService.getLoggedInUser().orElse(new User()))
+                .stream()
+                .filter(playlist -> playlist.getId() == playlistId)
+                .findFirst()
+                .orElseThrow(() -> new PlaylistNotExistException(String.format("Playlist %s does not exist", playlistId)))
+                .getSongs();
     }
 
     @Override

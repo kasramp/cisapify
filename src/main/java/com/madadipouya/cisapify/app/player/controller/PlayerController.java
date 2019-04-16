@@ -1,5 +1,6 @@
 package com.madadipouya.cisapify.app.player.controller;
 
+import com.madadipouya.cisapify.app.playlist.exception.PlaylistNotExistException;
 import com.madadipouya.cisapify.app.playlist.service.PlaylistService;
 import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.app.upload.service.UploadService;
@@ -10,7 +11,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.net.URLDecoder;
 import java.nio.file.Path;
@@ -47,7 +52,7 @@ public class PlayerController {
     @GetMapping("/player")
     public String showPlayer(@RequestParam(value = "playlist", required = false, defaultValue = "-1") long playlist,
                              Map<String, Object> model) {
-        if(playlist >= 0) {
+        if (playlist >= 0) {
             model.put("songsList", String.format("/user/songs/playlist/%s", playlist));
         } else {
             model.put("songsList", "/user/songs");
@@ -71,19 +76,14 @@ public class PlayerController {
     }
 
     @GetMapping(value = "/songs", produces = "application/json")
-    public ResponseEntity<List<SongDto>> getPlayList(Authentication authentication) {
-        return ResponseEntity.ok(uploadService.loadAllForUserEmail(authentication.getName()).stream().map(song -> new SongDto(song.getDisplayName(),
-                resourceURIBuilder.withClearState().withMethodName("serveFile").withPath(Paths.get(song.getUri())).build())
-        ).collect(Collectors.toList()));
+    public List<SongDto> getPlayList(Authentication authentication) {
+        return uploadService.loadAllForUserEmail(authentication.getName()).stream().map(this::convertToSongDto)
+                .collect(Collectors.toList());
     }
 
-
-    // TODO clean up, remove code duplication
     @GetMapping(value = "/songs/playlist/{playlistId}", produces = "application/json")
-    public ResponseEntity<List<SongDto>> getSongsForPlaylist(Authentication authentication, @PathVariable long playlistId) {
-        return ResponseEntity.ok(playlistService.getSongs(playlistId).stream().map(song ->
-            new SongDto(song.getDisplayName(), resourceURIBuilder.withClearState()
-            .withMethodName("serveFile").withPath(Paths.get(song.getUri())).build())).collect(Collectors.toList()));
+    public List<SongDto> getSongsForPlaylist(@PathVariable long playlistId) throws PlaylistNotExistException {
+        return playlistService.getSongs(playlistId).stream().map(this::convertToSongDto).collect(Collectors.toList());
     }
 
     private String createSongsURI(Path path) {
@@ -94,6 +94,15 @@ public class PlayerController {
                 .build();
     }
 
+    private SongDto convertToSongDto(Song song) {
+        return new SongDto(song.getDisplayName(),
+                resourceURIBuilder
+                        .withClearState()
+                        .withMethodName("serveFile")
+                        .withPath(Paths.get(song.getUri()))
+                        .build());
+    }
+
     public static class SongDto {
 
         private final String title;
@@ -102,7 +111,7 @@ public class PlayerController {
 
         private final String howl;
 
-        public SongDto(String title, String file) {
+        private SongDto(String title, String file) {
             this.title = title;
             this.file = file;
             howl = null;

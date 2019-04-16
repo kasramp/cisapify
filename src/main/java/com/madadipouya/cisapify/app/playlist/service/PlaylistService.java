@@ -1,6 +1,7 @@
 package com.madadipouya.cisapify.app.playlist.service;
 
 import com.madadipouya.cisapify.app.playlist.exception.AnonymousUserPlaylistCreationException;
+import com.madadipouya.cisapify.app.playlist.exception.PlaylistNotExistException;
 import com.madadipouya.cisapify.app.playlist.model.Playlist;
 import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.user.model.User;
@@ -17,7 +18,7 @@ public interface PlaylistService {
 
     Set<Playlist> getPlaylist(User user);
 
-    Set<Song> getSongs(long playlistId);
+    Set<Song> getSongs(long playlistId) throws PlaylistNotExistException;
 
     void delete(long playlistId);
 

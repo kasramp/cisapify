@@ -76,14 +76,14 @@ public class PlayerController {
     }
 
     @GetMapping(value = "/songs", produces = "application/json")
-    public List<SongDto> getAllUserSongs(Authentication authentication) {
-        return uploadService.loadAllForUserEmail(authentication.getName()).stream().map(this::convertToSongDto)
-                .collect(Collectors.toList());
+    public ResponseEntity<List<SongDto>> getAllUserSongs(Authentication authentication) {
+        return ResponseEntity.ok(uploadService.loadAllForUserEmail(authentication.getName()).stream().map(this::convertToSongDto)
+                .collect(Collectors.toList()));
     }
 
     @GetMapping(value = "/songs/playlist/{playlistId}", produces = "application/json")
-    public List<SongDto> getSongsForPlaylist(@PathVariable long playlistId) throws PlaylistNotExistException {
-        return playlistService.getSongs(playlistId).stream().map(this::convertToSongDto).collect(Collectors.toList());
+    public ResponseEntity<List<SongDto>> getSongsForPlaylist(@PathVariable long playlistId) throws PlaylistNotExistException {
+        return ResponseEntity.ok(playlistService.getSongs(playlistId).stream().map(this::convertToSongDto).collect(Collectors.toList()));
     }
 
     private String createSongsURI(Path path) {

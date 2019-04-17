@@ -10,9 +10,9 @@
 
 // Cache references to DOM elements.
 
-var uri = document.getElementById('playlistUri').value;
+var songsUri = document.getElementById('songsUri').value;
 
-fetch(uri)
+fetch(songsUri)
 .then(function(response) {
 	return response.json();
 }).then(function(songs) {

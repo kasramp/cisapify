@@ -52,7 +52,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     /*
      Get playlists via User Service to ensure other users won't
-     be able to get songs of each other by passing random playlist
+     be able to get songs of each other by passing random playlist id
       */
     @Override
     public Set<Song> getSongs(long playlistId) throws PlaylistNotExistException {

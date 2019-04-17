@@ -53,9 +53,9 @@ public class PlayerController {
     public String showPlayer(@RequestParam(value = "playlist", required = false, defaultValue = "-1") long playlist,
                              Map<String, Object> model) {
         if (playlist >= 0) {
-            model.put("songsList", String.format("/user/songs/playlist/%s", playlist));
+            model.put("songsUri", String.format("/user/songs/playlist/%s", playlist));
         } else {
-            model.put("songsList", "/user/songs");
+            model.put("songsUri", "/user/songs");
         }
 
         return "app/player/player.html";
@@ -76,7 +76,7 @@ public class PlayerController {
     }
 
     @GetMapping(value = "/songs", produces = "application/json")
-    public List<SongDto> getPlayList(Authentication authentication) {
+    public List<SongDto> getAllUserSongs(Authentication authentication) {
         return uploadService.loadAllForUserEmail(authentication.getName()).stream().map(this::convertToSongDto)
                 .collect(Collectors.toList());
     }

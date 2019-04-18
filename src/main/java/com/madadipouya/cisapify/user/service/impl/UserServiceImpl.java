@@ -1,8 +1,11 @@
 package com.madadipouya.cisapify.user.service.impl;
 
+import com.madadipouya.cisapify.app.playlist.exception.AnonymousUserPlaylistCreationException;
+import com.madadipouya.cisapify.user.exception.UserNotFoundException;
 import com.madadipouya.cisapify.user.model.User;
 import com.madadipouya.cisapify.user.repository.UserRepository;
 import com.madadipouya.cisapify.user.service.UserService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +32,10 @@ public class UserServiceImpl implements UserService {
 
     public Optional<User> getLoggedInUser() {
         return getUserByEmailAddress(getContext().getAuthentication().getName());
+    }
+
+    public User getCurrentUser() throws UserNotFoundException {
+        return getLoggedInUser().orElseThrow(() -> new UserNotFoundException("Cannot find the user"));
     }
 
     public Optional<User> getUserByEmailAddress(String emailAddress) {

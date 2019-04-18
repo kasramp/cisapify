@@ -27,6 +27,7 @@ public class SongServiceImpl implements SongService {
         return songRepository.save(song);
     }
 
+    //TODO do proper exception handling
     public Song findById(long songId) {
         return songRepository.findById(songId).get();
     }

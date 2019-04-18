@@ -1,16 +1,17 @@
 package com.madadipouya.cisapify.app.playlist.service.impl;
 
-import com.madadipouya.cisapify.app.playlist.exception.AnonymousUserPlaylistCreationException;
 import com.madadipouya.cisapify.app.playlist.exception.PlaylistNotExistException;
 import com.madadipouya.cisapify.app.playlist.model.Playlist;
 import com.madadipouya.cisapify.app.playlist.repository.PlaylistRepository;
 import com.madadipouya.cisapify.app.playlist.service.PlaylistService;
 import com.madadipouya.cisapify.app.song.model.Song;
+import com.madadipouya.cisapify.app.song.service.SongService;
 import com.madadipouya.cisapify.user.model.User;
 import com.madadipouya.cisapify.user.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class PlaylistServiceImpl implements PlaylistService {
@@ -19,9 +20,12 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     private final UserService userService;
 
-    public PlaylistServiceImpl(PlaylistRepository playlistRepository, UserService userService) {
+    private final SongService songService;
+
+    public PlaylistServiceImpl(PlaylistRepository playlistRepository, UserService userService, SongService songService) {
         this.playlistRepository = playlistRepository;
         this.userService = userService;
+        this.songService = songService;
     }
 
     @Override
@@ -34,10 +38,13 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public void create(String playlistName, Set<Song> songs) throws AnonymousUserPlaylistCreationException {
-        User user = userService.getLoggedInUser()
-                .orElseThrow(() -> new AnonymousUserPlaylistCreationException("Unable to create playlist for anonymous user"));
-        create(playlistName, songs, user);
+    public void create(Set<Long> songIds, String playlistName) {
+        create(playlistName, songIds.stream().map(songService::findById).collect(Collectors.toSet()));
+    }
+
+    @Override
+    public void create(String playlistName, Set<Song> songs) {
+        create(playlistName, songs, userService.getCurrentUser());
     }
 
     @Override

@@ -28,5 +28,10 @@ public interface SongService {
      */
     List<Song> getByUserId(long userId);
 
+    /**
+     * Retrieves a {@link Song} by {@link Song#id}
+     * @param songId to lookup
+     * @return song associated with the given id
+     */
     Song findById(long songId);
 }

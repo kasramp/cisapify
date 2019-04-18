@@ -27,6 +27,11 @@ public class SongServiceImpl implements SongService {
         return songRepository.save(song);
     }
 
+    //TODO do proper exception handling
+    public Song findById(long songId) {
+        return songRepository.findById(songId).get();
+    }
+
     @Override
     public List<Song> getByUserId(long userId) {
         return songRepository.findByUserId(userId);

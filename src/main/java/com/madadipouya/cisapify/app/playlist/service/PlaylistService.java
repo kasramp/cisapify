@@ -1,6 +1,5 @@
 package com.madadipouya.cisapify.app.playlist.service;
 
-import com.madadipouya.cisapify.app.playlist.exception.AnonymousUserPlaylistCreationException;
 import com.madadipouya.cisapify.app.playlist.exception.PlaylistNotExistException;
 import com.madadipouya.cisapify.app.playlist.model.Playlist;
 import com.madadipouya.cisapify.app.song.model.Song;
@@ -12,7 +11,9 @@ public interface PlaylistService {
 
     void create(String playlistName, Set<Song> songs, User user);
 
-    void create(String playlistName, Set<Song> songs) throws AnonymousUserPlaylistCreationException;
+    void create(Set<Long> songIds, String playlistName);
+
+    void create(String playlistName, Set<Song> songs);
 
     void create(Playlist playList);
 

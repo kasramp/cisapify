@@ -27,4 +27,6 @@ public interface SongService {
      * @return list of Songs
      */
     List<Song> getByUserId(long userId);
+
+    Song findById(long songId);
 }

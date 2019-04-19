@@ -34,6 +34,6 @@ public class SongUploadController {
 
     @GetMapping("/upload")
     public String showUploadForm() {
-        return "app/player/upload/song_upload";
+        return "app/upload/song_upload";
     }
 }

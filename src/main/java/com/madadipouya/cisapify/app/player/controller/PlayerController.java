@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,27 +44,27 @@ public class PlayerController {
     }
 
     @GetMapping("/player_old")
-    public String showOldPlayer(Map<String, Object> model, Authentication authentication) {
-        model.put("songs", uploadService.loadAllForUserEmail(authentication.getName()).stream()
+    public String showOldPlayer(Model model, Authentication authentication) {
+        model.addAttribute("songs", uploadService.loadAllForUserEmail(authentication.getName()).stream()
                 .collect(Collectors.toMap(song -> createSongsURI(Paths.get(song.getUri())), Song::getDisplayName)));
         return "app/player/player_old.html";
     }
 
     @GetMapping("/player")
     public String showPlayer(@RequestParam(value = "playlist", required = false, defaultValue = "-1") long playlist,
-                             Map<String, Object> model) {
+                             Model model) {
         if (playlist >= 0) {
-            model.put("songsUri", String.format("/user/songs/playlist/%s", playlist));
+            model.addAttribute("songsUri", String.format("/user/songs/playlist/%s", playlist));
         } else {
-            model.put("songsUri", "/user/songs");
+            model.addAttribute("songsUri", "/user/songs");
         }
 
         return "app/player/player.html";
     }
 
     @GetMapping("/play/{songName}")
-    public String playSong(@PathVariable String songName, Map<String, Object> model) {
-        model.put("file", resourceURIBuilder.withClearState().withMethodName("serveFile").withParameters(songName).build());
+    public String playSong(@PathVariable String songName, Model model) {
+        model.addAttribute("file", resourceURIBuilder.withClearState().withMethodName("serveFile").withParameters(songName).build());
         return "app/player/player_old.html";
     }
 

@@ -7,6 +7,7 @@ import com.madadipouya.cisapify.user.model.User;
 import com.madadipouya.cisapify.user.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,11 +36,11 @@ public class PlaylistController {
     }
 
     @GetMapping("/playlists")
-    public String showPlaylists(Map<String, Object> model) {
+    public String showPlaylists(Model model) {
         User user = userService.getLoggedInUser().orElse(new User());
-        model.put("playlists", playlistService.getPlaylist(user).stream().collect(
+        model.addAttribute("playlists", playlistService.getPlaylist(user).stream().collect(
                 Collectors.toMap(this::constructPlaylistUri, Playlist::getName)));
-        return "app/player/playlist.html";
+        return "app/playlist/playlist.html";
     }
 
     @GetMapping("/playlists/{playlistId}")
@@ -48,10 +49,10 @@ public class PlaylistController {
     }
 
     @GetMapping("/playlists/create")
-    public String showCreatePlaylist(Map<String, Object> model, Authentication authentication) {
-        model.put("allUserSongs", uploadService.loadAllForUserEmail(authentication.getName()));
-        model.put("command", new PlayListCommand());
-        return "app/player/playlist_create.html";
+    public String showCreatePlaylist(Model model, Authentication authentication) {
+        model.addAllAttributes(Map.of("command", new PlayListCommand(),
+                "allUserSongs", uploadService.loadAllForUserEmail(authentication.getName())));
+        return "app/playlist/playlist_create.html";
     }
 
     @PostMapping("/playlists/create")

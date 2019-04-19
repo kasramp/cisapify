@@ -17,14 +17,16 @@
 </div>
 
 <form action="#" th:action="@{/user/playlists/create}" th:object="${command}" method="post">
-    <p>Simple Text Field: <input type="text" th:field="*{playlistName}"/></p>
-    <ul>
-        <li th:each="checkboxValue: ${allUserSongs}">
-            <input type="checkbox" th:field="*{playlistSongs}" th:value="${checkboxValue.id}"/>
+    <div class="container">
+        <div class="form-group">
+            <label for="playlistName" th:text="#{playlistName}"></label>
+            <input type="text" class="form-control" id="playlistName" th:field="*{playlistName}">
+        </div>
+        <div class="checkbox" th:each="checkboxValue: ${allUserSongs}">
+            <input type="checkbox" th:field="*{playlistSongs}" th:value="${checkboxValue.id}">
             <label th:for="${#ids.prev('playlistSongs')}" th:text="${checkboxValue.displayName}"></label>
-        </li>
-    </ul>
+        </div>
+    </div>
 </form>
-
 </body>
 </html>

@@ -54,10 +54,10 @@ INSERT INTO visits VALUES (4, 7, '2013-01-04', 'spayed');
 
 -- CISAPIFY START
 
-INSERT INTO users VALUES (1, 'john.wick@gmail.com', '1234', true);
-INSERT INTO users VALUES (2, 'test@gmail.com', '001', true);
-INSERT INTO users VALUES (3, 'mike.shinoda@gmail.com', 'password', true);
-INSERT INTO users VALUES (4, 'eminem@gmail.com', 'simple', true);
+INSERT INTO users(id, email_address, password, enabled) VALUES (1, 'john.wick@gmail.com', '1234', true);
+INSERT INTO users(id, email_address, password, enabled) VALUES (2, 'test@gmail.com', '001', true);
+INSERT INTO users(id, email_address, password, enabled) VALUES (3, 'mike.shinoda@gmail.com', 'password', true);
+INSERT INTO users(id, email_address, password, enabled) VALUES (4, 'eminem@gmail.com', 'simple', true);
 
 INSERT INTO songs VALUES(1, 'not afraid.mp3', 'fec6f39e-f793-11e8-8eb2-f2801f1b9fd1.mp3', '/tmp/fec6f39e-f793-11e8-8eb2-f2801f1b9fd1.mp3', 1)
 INSERT INTO songs VALUES(2, 'plastic heart.mp3', 'fec6f628-f793-11e8-8eb2-f2801f1b9fd1.mp3', '/tmp/fec6f628-f793-11e8-8eb2-f2801f1b9fd1.mp3', 1)

@@ -47,7 +47,7 @@
                     class="btn btn-outline-success" type="button" id="profileMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             </button>
             <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="profileMenuButton">
-                <a class="dropdown-item" th:text="#{profile}" href="#"></a>
+                <a class="dropdown-item" th:text="#{profile}" th:href="@{/user/profile}"></a>
                 <a class="dropdown-item" th:text="#{logout}" th:href="@{/logout}"></a>
             </div>
         </div>

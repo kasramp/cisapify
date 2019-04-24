@@ -64,6 +64,8 @@ public class Application {
             user.setPassword("12345");
             user.setEmailAddress("kasra@madadipouya.com");
             user.setSongs(Set.of());
+            user.setGitlabRepositoryName("Gitlab repository");
+            user.setGitlabToken("Gitlab Token");
             user.setEnabled(true);
             user.setRoles(Set.of(adminRole));
             userService.save(user);

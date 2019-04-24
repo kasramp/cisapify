@@ -3,7 +3,20 @@ package com.madadipouya.cisapify.user.model;
 import com.madadipouya.cisapify.app.playlist.model.Playlist;
 import com.madadipouya.cisapify.app.song.model.Song;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -36,13 +49,21 @@ public class User {
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
+    @Column(name = "gitlab_token")
+    @Size(max = 256)
+    private String gitlabToken;
+
+    @Column(name = "gitlab_repository_name")
+    @Size(max = 512)
+    private String gitlabRepositoryName;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Song> songs;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Playlist> playlists;
 
-    @ManyToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
@@ -72,6 +93,22 @@ public class User {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getGitlabToken() {
+        return gitlabToken;
+    }
+
+    public void setGitlabToken(String gitlabToken) {
+        this.gitlabToken = gitlabToken;
+    }
+
+    public String getGitlabRepositoryName() {
+        return gitlabRepositoryName;
+    }
+
+    public void setGitlabRepositoryName(String gitlabRepositoryName) {
+        this.gitlabRepositoryName = gitlabRepositoryName;
     }
 
     public Set<Song> getSongs() {

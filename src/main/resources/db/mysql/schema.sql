@@ -72,6 +72,8 @@ CREATE TABLE users (
   email_address VARCHAR(512) NOT NULL,
   password VARCHAR(1024) NOT NULL,
   enabled BOOLEAN DEFAULT FALSE NOT NULL,
+  gitlab_token VARCHAR(1024),
+  gitlab_repository_name VARCHAR(512),
   CONSTRAINT uc_user_email_address UNIQUE(email_address)
 ) engine=InnoDB;
 CREATE INDEX idx_user_email_address ON users (email_address);

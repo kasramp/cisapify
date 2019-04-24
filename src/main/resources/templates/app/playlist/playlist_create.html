@@ -9,13 +9,6 @@
     <h2 th:text="${message}"/>
 </div>
 
-<div th:if="${file}">
-    <audio controls>
-        <source th:src="@{${file}}" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-</div>
-
 <form action="#" th:action="@{/user/playlists/create}" th:object="${command}" method="post">
     <div class="container">
         <div class="form-group">

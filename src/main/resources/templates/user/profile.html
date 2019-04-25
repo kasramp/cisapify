@@ -9,6 +9,7 @@
     <h2 th:text="${message}"/>
 </div>
 
+<div th:if="${param.success}" class="alert alert-success" th:text="#{profileUpdated}"></div>
 <form action="#" th:action="@{/user/profile}" th:object="${command}" method="post">
     <div class="container">
         <div class="form-group">
@@ -20,14 +21,14 @@
 
         <div class="form-group">
             <label for="password" th:text="#{password}"></label>
-            <input type="password" class="form-control" id="password" th:field="*{password}">
+            <input type="password" class="form-control" id="password" name="password" th:value="${command.password}">
             <p th:each="error: ${#fields.errors('password')}"
                th:text="${error}">Validation error</p>
         </div>
 
         <div class="form-group">
             <label for="confirmPassword" th:text="#{confirmPassword}"></label>
-            <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}">
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" th:value="${command.confirmPassword}">
             <p th:each="error: ${#fields.errors('confirmPassword')}"
                th:text="${error}">Validation error</p>
         </div>
@@ -44,7 +45,7 @@
                th:text="${error}">Validation error</p>
         </div>
     </div>
-    <button type="submit" th:text="#{submit}"></button>
+    <button class="btn btn-lg btn-block btn-success" type="submit" th:text="#{submit}"></button>
 </form>
 
 </body>

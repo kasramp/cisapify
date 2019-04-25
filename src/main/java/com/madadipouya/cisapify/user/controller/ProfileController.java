@@ -3,6 +3,7 @@ package com.madadipouya.cisapify.user.controller;
 import com.madadipouya.cisapify.user.metadata.ConfirmPassword;
 import com.madadipouya.cisapify.user.model.User;
 import com.madadipouya.cisapify.user.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -31,10 +33,18 @@ public class ProfileController {
     }
 
     @PostMapping
-    public String editProfile(@Validated @ModelAttribute("command") UserCommand command) {
-        return "";
+    public ModelAndView editProfile(@Validated @ModelAttribute("command") UserCommand command) {
+        User user = userService.getCurrentUser();
+        boolean isPasswordUpdated = !StringUtils.equals(user.getPassword(), command.getPassword());
+        if(isPasswordUpdated) {
+            user.setPassword(command.getPassword());
+        }
+        user.setEmailAddress(command.getEmailAddress());
+        user.setGitlabToken(command.getGitlabToken());
+        user.setGitlabRepositoryName(command.getGitlabRepositoryName());
+        userService.save(user, isPasswordUpdated);
+        return new ModelAndView("redirect:/user/profile?success");
     }
-
 
     @ConfirmPassword
     public static class UserCommand {
@@ -68,8 +78,7 @@ public class ProfileController {
         }
 
         private static UserCommand transform(User user) {
-            return new UserCommand(
-                    user.getEmailAddress(),
+            return new UserCommand(user.getEmailAddress(),
                     user.getPassword(),
                     user.getPassword(),
                     user.getGitlabToken(),

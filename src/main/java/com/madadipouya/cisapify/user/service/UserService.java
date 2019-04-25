@@ -45,4 +45,14 @@ public interface UserService {
      * @return {@link User} with non-null Id if the entity didn't exist, or updated {@link User} otherwise
      */
     User save(User user);
+
+    /**
+     * Persists a User to the database
+     *
+     * @param user to persist
+     * @param isPasswordUpdated flag to whether encrypt password or not
+     *
+     * @return {@link User} with non-null Id if the entity didn't exist, or updated {@link User} otherwise
+     */
+    User save(User user, boolean isPasswordUpdated);
 }

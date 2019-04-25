@@ -1,11 +1,9 @@
 package com.madadipouya.cisapify.user.service.impl;
 
-import com.madadipouya.cisapify.app.playlist.exception.AnonymousUserPlaylistCreationException;
 import com.madadipouya.cisapify.user.exception.UserNotFoundException;
 import com.madadipouya.cisapify.user.model.User;
 import com.madadipouya.cisapify.user.repository.UserRepository;
 import com.madadipouya.cisapify.user.service.UserService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +41,13 @@ public class UserServiceImpl implements UserService {
     }
 
     public User save(User user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        return save(user, true);
+    }
+
+    public User save(User user, boolean isPasswordUpdated) {
+        if(isPasswordUpdated) {
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        }
         return userRepository.save(user);
     }
 }

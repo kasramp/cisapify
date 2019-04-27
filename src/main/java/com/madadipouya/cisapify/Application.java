@@ -24,9 +24,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @SpringBootApplication
-@ComponentScan("com.madadipouya.cisapify")
-@EnableJpaRepositories("com.madadipouya.cisapify")
-@EntityScan("com.madadipouya.cisapify")
 public class Application {
 
     public static void main(String[] args) {

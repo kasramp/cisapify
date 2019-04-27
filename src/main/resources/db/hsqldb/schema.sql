@@ -83,9 +83,9 @@ DROP TABLE songs IF EXISTS;
 
 CREATE TABLE songs (
   id INTEGER IDENTITY PRIMARY KEY,
-  display_name VARCHAR(4096) NOT NULL,
+  display_name VARCHAR(1024) NOT NULL,
   file_name VARCHAR(128) NOT NULL,
-  uri VARCHAR(4096) NOT NULL,
+  uri VARCHAR(1024) NOT NULL,
   user_id INTEGER NOT NULL,
 
   CONSTRAINT uc_song_uri UNIQUE(uri),
@@ -116,7 +116,7 @@ CREATE TABLE user_role (
 
 CREATE TABLE playlists (
   id INTEGER IDENTITY PRIMARY KEY,
-  name VARCHAR(4096) NOT NULL,
+  name VARCHAR(1024) NOT NULL,
   user_id INTEGER NOT NULL,
 
   CONSTRAINT uc_playlist_name UNIQUE(name),

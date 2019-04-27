@@ -1,12 +1,10 @@
-CREATE DATABASE IF NOT EXISTS petclinic;
+CREATE DATABASE IF NOT EXISTS cisapify;
 
-ALTER DATABASE petclinic
+ALTER DATABASE cisapify
   DEFAULT CHARACTER SET utf8
   DEFAULT COLLATE utf8_general_ci;
 
-GRANT ALL PRIVILEGES ON petclinic.* TO pc@localhost IDENTIFIED BY 'pc';
-
-USE petclinic;
+USE cisapify;
 
 CREATE TABLE IF NOT EXISTS vets (
   id INT(4) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -67,22 +65,22 @@ CREATE TABLE IF NOT EXISTS visits (
 
 -- CISAPIFY
 
-CREATE TABLE users (
-  id INTEGER IDENTITY PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER AUTO_INCREMENT PRIMARY KEY,
   email_address VARCHAR(512) NOT NULL,
   password VARCHAR(1024) NOT NULL,
   enabled BOOLEAN DEFAULT FALSE NOT NULL,
   gitlab_token VARCHAR(1024),
   gitlab_repository_name VARCHAR(512),
-  CONSTRAINT uc_user_email_address UNIQUE(email_address)
+  CONSTRAINT uc_user_email_address UNIQUE(email_address),
+  INDEX idx_user_email_address (email_address)
 ) engine=InnoDB;
-CREATE INDEX idx_user_email_address ON users (email_address);
 
-CREATE TABLE songs (
-  id INTEGER IDENTITY PRIMARY KEY,
-  display_name VARCHAR(4096) NOT NULL,
+CREATE TABLE IF NOT EXISTS songs (
+  id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  display_name VARCHAR(1024) NOT NULL,
   file_name VARCHAR(128) NOT NULL,
-  uri VARCHAR(4096) NOT NULL,
+  uri VARCHAR(1024) NOT NULL,
   user_id INTEGER NOT NULL,
 
   CONSTRAINT uc_song_uri UNIQUE(uri),
@@ -90,19 +88,19 @@ CREATE TABLE songs (
   FOREIGN KEY (user_id)
         REFERENCES users(id)
         ON DELETE CASCADE
-        ON UPDATE CASCADE
+        ON UPDATE CASCADE,
+  INDEX idx_song_file_name (file_name)
 ) engine=InnoDB;
-CREATE INDEX idx_song_file_name ON songs (file_name);
 
-CREATE TABLE roles (
-  id INTEGER IDENTITY PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS roles (
+  id INTEGER AUTO_INCREMENT PRIMARY KEY,
   role VARCHAR(128) NOT NULL,
 
-  CONSTRAINT uc_role_role_name UNIQUE (role)
+  CONSTRAINT uc_role_role_name UNIQUE (role),
+  INDEX idx_role_role_name (role)
 ) engine=InnoDB;
-CREATE INDEX idx_role_role_name on roles (role);
 
-CREATE TABLE user_role (
+CREATE TABLE IF NOT EXISTS user_role (
   user_id INTEGER NOT NULL,
   role_id INTEGER NOT NULL,
   PRIMARY KEY (user_id, role_id),
@@ -111,9 +109,9 @@ CREATE TABLE user_role (
   CONSTRAINT fk_user_role_role_id FOREIGN KEY (role_id) REFERENCES roles (id)
 ) engine=InnoDB;
 
-CREATE TABLE playlists (
-  id INTEGER IDENTITY PRIMARY KEY,
-  name VARCHAR(4096) NOT NULL,
+CREATE TABLE IF NOT EXISTS playlists (
+  id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(1024) NOT NULL,
   user_id INTEGER NOT NULL,
 
   CONSTRAINT uc_playlist_name UNIQUE(name),
@@ -123,7 +121,7 @@ CREATE TABLE playlists (
         ON UPDATE CASCADE
 ) engine=InnoDB;
 
-CREATE TABLE playlist_song (
+CREATE TABLE IF NOT EXISTS playlist_song (
   playlist_id INTEGER NOT NULL,
   song_id INTEGER NOT NULL,
 

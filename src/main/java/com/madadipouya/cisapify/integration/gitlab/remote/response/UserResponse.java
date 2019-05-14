@@ -1,4 +1,4 @@
-package com.madadipouya.cisapify.integration.gitlab.remote.request;
+package com.madadipouya.cisapify.integration.gitlab.remote.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

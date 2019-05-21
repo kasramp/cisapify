@@ -5,7 +5,9 @@ import com.madadipouya.cisapify.user.exception.UserNotFoundException;
 import com.madadipouya.cisapify.user.model.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface UserService {
 
@@ -55,4 +57,7 @@ public interface UserService {
      * @return {@link User} with non-null Id if the entity didn't exist, or updated {@link User} otherwise
      */
     User save(User user, boolean isPasswordUpdated);
+
+
+    List<User> getAll();
 }

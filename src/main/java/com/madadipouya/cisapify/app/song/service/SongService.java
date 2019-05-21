@@ -34,4 +34,8 @@ public interface SongService {
      * @return song associated with the given id
      */
     Song findById(long songId);
+
+    void deleteAll(List<Song> songs);
+
+    void saveAll(List<Song> songs);
 }

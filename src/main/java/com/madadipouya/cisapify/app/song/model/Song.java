@@ -75,6 +75,12 @@ public class Song {
         this.user = user;
     }
 
+
+    @Transient
+    public boolean isGitLabSourced() {
+        return getUri().contains("://gitlab.com/");
+    }
+
     public static SongBuilder Builder() {
         return new SongBuilder();
     }

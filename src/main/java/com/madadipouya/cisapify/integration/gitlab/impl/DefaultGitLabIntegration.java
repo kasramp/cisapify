@@ -60,7 +60,7 @@ public class DefaultGitLabIntegration implements GitLabIntegration {
             songs.addAll(Optional.ofNullable(responseEntity.getBody())
                     .orElse(List.of())
                     .stream()
-                    .filter(RepositoryTreeResponse::isFile)
+                    .filter(RepositoryTreeResponse::isAudioFile)
                     .map(repositoryTreeResponse -> Song.Builder()
                             .withUser(user)
                             .withDisplayName(repositoryTreeResponse.getName())

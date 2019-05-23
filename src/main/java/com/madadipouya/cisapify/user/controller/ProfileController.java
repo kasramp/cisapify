@@ -1,9 +1,11 @@
 package com.madadipouya.cisapify.user.controller;
 
+import com.madadipouya.cisapify.integration.gitlab.listener.ReindexGitLabSongsListener;
 import com.madadipouya.cisapify.user.metadata.ConfirmPassword;
 import com.madadipouya.cisapify.user.model.User;
 import com.madadipouya.cisapify.user.service.UserService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +21,10 @@ import javax.validation.constraints.NotBlank;
 @Controller
 @RequestMapping("/user/profile")
 public class ProfileController {
+
+    //TODO remove it later
+    @Autowired
+    private ReindexGitLabSongsListener reindexGitLabSongsListener;
 
     private final UserService userService;
 
@@ -43,6 +49,7 @@ public class ProfileController {
         user.setGitlabToken(command.getGitlabToken());
         user.setGitlabRepositoryName(command.getGitlabRepositoryName());
         userService.save(user, isPasswordUpdated);
+        reindexGitLabSongsListener.reindexGitLabSongsAsync();
         return new ModelAndView("redirect:/user/profile?success");
     }
 

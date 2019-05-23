@@ -33,6 +33,11 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
+    public Song findByUri(String uri) {
+        return songRepository.findByUri(uri);
+    }
+
+    @Override
     public List<Song> getByUserId(long userId) {
         return songRepository.findByUserId(userId);
     }

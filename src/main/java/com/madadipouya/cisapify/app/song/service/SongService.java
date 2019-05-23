@@ -35,6 +35,8 @@ public interface SongService {
      */
     Song findById(long songId);
 
+    Song findByUri(String uri);
+
     void deleteAll(List<Song> songs);
 
     void saveAll(List<Song> songs);

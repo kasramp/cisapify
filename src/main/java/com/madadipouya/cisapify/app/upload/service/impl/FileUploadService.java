@@ -80,16 +80,20 @@ public class FileUploadService implements UploadService {
 
     @Override
     public Resource load(String filename) throws StorageFileNotFoundException {
+            return load(loadPath(filename));
+    }
+
+    @Override
+    public Resource load(Path path) throws StorageFileNotFoundException {
         try {
-            Path file = loadPath(filename);
-            Resource resource = new UrlResource(file.toUri());
+            Resource resource = new UrlResource(path.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new StorageFileNotFoundException(i18nService.getMessage("upload.service.fileNotFound", filename));
+                throw new StorageFileNotFoundException(i18nService.getMessage("upload.service.fileNotFound", path.getFileName()));
             }
         } catch (MalformedURLException e) {
-            throw new StorageFileNotFoundException(i18nService.getMessage("upload.service.fileNotFound", filename), e);
+            throw new StorageFileNotFoundException(i18nService.getMessage("upload.service.fileNotFound", path.getFileName()), e);
         }
     }
 

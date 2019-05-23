@@ -35,7 +35,12 @@ public class ResourceURIBuilder {
     }
 
     public ResourceURIBuilder withPath(Path path) {
-        this.path = path.getFileName().toString();
+        this.path = path.toString();
+        return this;
+    }
+
+    public ResourceURIBuilder withPath(String path) {
+        this.path = path;
         return this;
     }
 

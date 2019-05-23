@@ -13,14 +13,17 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -40,6 +43,12 @@ public class DefaultGitLabIntegration implements GitLabIntegration {
 
     private final UserService userService;
 
+    //https://gitlab.com/api/v4/projects/kasramp%2Fmz/repository/blobs/e8e6c02267331817da62defde1ec8363c200fdc0/raw
+
+    // https://gitlab.com/api/v4/projects/kasramp%2Fmz/repository/tree?recursive=true
+    // https://gitlab.com/api/v4/projects/kasramp%2Fmz/repository/tree?path=Singles
+
+
     private DefaultGitLabIntegration(UserService userService, RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
         this.userService = userService;
@@ -48,17 +57,18 @@ public class DefaultGitLabIntegration implements GitLabIntegration {
     // TODO proper exception handling
     @Override
     public String getUserHandle(String token) {
-        return restTemplate.getForEntity(String.format(BASE_URL, USER_URL), UserResponse.class).getBody().getHandle();
+        return restTemplate.exchange(String.format(BASE_URL, USER_URL), HttpMethod.GET, createHeader(token), UserResponse.class).getBody().getHandle();
     }
 
     public List<Song> getSongs(String token, String handle, String repositoryName) {
         List<Song> songs = new ArrayList<>();
         userService.getLoggedInUser().ifPresent(user -> {
-            ResponseEntity<List<RepositoryTreeResponse>> responseEntity = restTemplate.exchange(String.format(PROJECT_URL, handle, repositoryName),
-                    HttpMethod.GET, createHeader(token), new ParameterizedTypeReference<>() {
+            URI uri = UriComponentsBuilder.fromHttpUrl(String.format(PROJECT_URL, handle, repositoryName)).build(true).toUri();
+            ResponseEntity<Set<RepositoryTreeResponse>> responseEntity = restTemplate.exchange(uri,
+                    HttpMethod.GET, createHeader(token), new ParameterizedTypeReference<Set<RepositoryTreeResponse>>() {
                     });
             songs.addAll(Optional.ofNullable(responseEntity.getBody())
-                    .orElse(List.of())
+                    .orElse(Set.of())
                     .stream()
                     .filter(RepositoryTreeResponse::isAudioFile)
                     .map(repositoryTreeResponse -> Song.Builder()
@@ -73,7 +83,7 @@ public class DefaultGitLabIntegration implements GitLabIntegration {
     }
 
     public Path loadRemoteSong(String token, Song song) throws IOException, FailRetrievingRemoteObjectException {
-        ResponseEntity<byte[]> responseEntity = restTemplate.exchange(song.getUri(),
+        ResponseEntity<byte[]> responseEntity = restTemplate.exchange(UriComponentsBuilder.fromHttpUrl(song.getUri()).build(true).toUri(),
                 HttpMethod.GET, createHeader(token), byte[].class);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             return Files.write(Paths.get(String.format("/tmp/%s.mp3", song.getId())), responseEntity.getBody());

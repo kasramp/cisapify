@@ -16,6 +16,8 @@ public interface UploadService {
 
     Resource load(String fileName) throws StorageFileNotFoundException;
 
+    Resource load(Path path) throws StorageFileNotFoundException;
+
     Stream<Path> loadAll() throws StorageException;
 
     Set<Song> loadAllForUserEmail(String emailAddress);

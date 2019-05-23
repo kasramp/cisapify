@@ -3,9 +3,14 @@ package com.madadipouya.cisapify.app.player.controller;
 import com.madadipouya.cisapify.app.playlist.exception.PlaylistNotExistException;
 import com.madadipouya.cisapify.app.playlist.service.PlaylistService;
 import com.madadipouya.cisapify.app.song.model.Song;
+import com.madadipouya.cisapify.app.song.service.SongService;
 import com.madadipouya.cisapify.app.upload.service.UploadService;
 import com.madadipouya.cisapify.app.upload.service.exception.StorageFileNotFoundException;
+import com.madadipouya.cisapify.integration.gitlab.GitLabIntegration;
+import com.madadipouya.cisapify.integration.gitlab.exception.FailRetrievingRemoteObjectException;
+import com.madadipouya.cisapify.user.service.UserService;
 import com.madadipouya.cisapify.util.ResourceURIBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +23,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,6 +43,15 @@ public class PlayerController {
     private final PlaylistService playlistService;
 
     private final ResourceURIBuilder resourceURIBuilder;
+
+    @Autowired
+    private SongService songService;
+
+    @Autowired
+    private GitLabIntegration gitLabIntegration;
+
+    @Autowired
+    private UserService userService;
 
     public PlayerController(UploadService uploadService, PlaylistService playlistService) {
         this.uploadService = uploadService;
@@ -70,15 +86,22 @@ public class PlayerController {
 
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws StorageFileNotFoundException {
-        Resource file = uploadService.load(URLDecoder.decode(filename, UTF_8));
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws StorageFileNotFoundException, IOException, FailRetrievingRemoteObjectException {
+        filename = new String(Base64.getDecoder().decode(filename), UTF_8);
+        Resource file;
+        Song song = songService.findByUri(filename);
+        if(song.isGitLabSourced()) {
+           file = uploadService.load(gitLabIntegration.loadRemoteSong(userService.getCurrentUser().getGitlabToken(), song));
+        } else {
+            file = uploadService.load(URLDecoder.decode(Path.of(filename).getFileName().toString(), UTF_8));
+        }
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
     @GetMapping(value = "/songs", produces = "application/json")
     public ResponseEntity<List<SongDto>> getAllUserSongs(Authentication authentication) {
-        return ResponseEntity.ok(uploadService.loadAllForUserEmail(authentication.getName()).stream().map(this::convertToSongDto)
+        return ResponseEntity.ok(userService.getCurrentUser().getSongs().stream().map(this::convertToSongDto)
                 .collect(Collectors.toList()));
     }
 
@@ -100,7 +123,7 @@ public class PlayerController {
                 resourceURIBuilder
                         .withClearState()
                         .withMethodName("serveFile")
-                        .withPath(Paths.get(song.getUri()))
+                        .withPath(Base64.getEncoder().encodeToString(song.getUri().getBytes(UTF_8)))
                         .build());
     }
 

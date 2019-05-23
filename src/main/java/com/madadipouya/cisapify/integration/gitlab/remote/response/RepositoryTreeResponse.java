@@ -6,8 +6,8 @@ import java.util.Set;
 
 public class RepositoryTreeResponse {
 
-    private static Set<String> AUDIO_FORMATS = Set.of(".aac", ".flac", ".m4a", ".m4b", ".m4p", ".mp3",
-            ".mpc", ".ogg", ".oga", ".wav", ".wma", ".webm");
+    private static Set<String> AUDIO_FORMATS = Set.of("aac", "flac", "m4a", "m4b", "m4p", "mp3",
+            "mpc", "ogg", "oga", "wav", "wma", "webm");
 
     private String id;
 
@@ -71,6 +71,20 @@ public class RepositoryTreeResponse {
         this.mode = mode;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof RepositoryTreeResponse)) {
+            return false;
+        }
+        RepositoryTreeResponse repositoryTreeResponse = (RepositoryTreeResponse) o;
+        return repositoryTreeResponse.getId().equals(id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 
     private enum FileType {
         BLOB, TREE

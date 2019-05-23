@@ -3,11 +3,13 @@ package com.madadipouya.cisapify.integration.gitlab.listener;
 import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.app.song.service.SongService;
 import com.madadipouya.cisapify.integration.gitlab.GitLabIntegration;
+import com.madadipouya.cisapify.user.model.User;
 import com.madadipouya.cisapify.user.service.UserService;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -34,10 +36,21 @@ public class ReindexGitLabSongsListener implements ApplicationListener<Applicati
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         // TODO Replace ExecutorService with Akka
-        executorService.scheduleAtFixedRate(() -> userService.getAll().forEach(user -> {
+        executorService.scheduleAtFixedRate(this::reindexGitLabSongs, 1, 60, TimeUnit.MINUTES);
+    }
+
+    private void reindexGitLabSongs() {
+        userService.getAll().forEach(user -> {
             songService.deleteAll(user.getSongs().stream().filter(Song::isGitLabSourced).collect(Collectors.toList()));
             songService.saveAll(gitLabIntegration.getSongs(user.getGitlabToken(),
                     gitLabIntegration.getUserHandle(user.getGitlabToken()), user.getGitlabRepositoryName()));
-        }), 1, 60, TimeUnit.MINUTES);
+        });
+    }
+
+    public void reindexGitLabSongsAsync() {
+            User user = userService.getCurrentUser();
+            songService.deleteAll(user.getSongs().stream().filter(Song::isGitLabSourced).collect(Collectors.toList()));
+            songService.saveAll(gitLabIntegration.getSongs(user.getGitlabToken(),
+                    gitLabIntegration.getUserHandle(user.getGitlabToken()), user.getGitlabRepositoryName()));
     }
 }

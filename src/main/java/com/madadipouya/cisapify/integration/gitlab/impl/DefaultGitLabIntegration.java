@@ -86,7 +86,10 @@ public class DefaultGitLabIntegration implements GitLabIntegration {
         ResponseEntity<byte[]> responseEntity = restTemplate.exchange(UriComponentsBuilder.fromHttpUrl(song.getUri()).build(true).toUri(),
                 HttpMethod.GET, createHeader(token), byte[].class);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return Files.write(Paths.get(String.format("/tmp/%s.mp3", song.getId())), responseEntity.getBody());
+            if(Files.exists(Path.of(String.format("/tmp/%s.mp3", song.getFileName())))) {
+                return Path.of(String.format("/tmp/%s.mp3", song.getFileName()));
+            }
+            return Files.write(Paths.get(String.format("/tmp/%s.mp3", song.getFileName())), responseEntity.getBody());
         }
         throw new FailRetrievingRemoteObjectException(String.format("Unable to retrieve song blob for song id: %s. Got response: %s",
                 song.getId(), responseEntity.getStatusCode()));

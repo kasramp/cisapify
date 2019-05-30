@@ -42,15 +42,13 @@ public class ReindexGitLabSongsListener implements ApplicationListener<Applicati
     private void reindexGitLabSongs() {
         userService.getAll().forEach(user -> {
             songService.deleteAll(user.getSongs().stream().filter(Song::isGitLabSourced).collect(Collectors.toList()));
-            songService.saveAll(gitLabIntegration.getSongs(user.getGitlabToken(),
-                    gitLabIntegration.getUserHandle(user.getGitlabToken()), user.getGitlabRepositoryName()));
+            songService.saveAll(gitLabIntegration.getSongs(user));
         });
     }
 
     public void reindexGitLabSongsAsync() {
             User user = userService.getCurrentUser();
             songService.deleteAll(user.getSongs().stream().filter(Song::isGitLabSourced).collect(Collectors.toList()));
-            songService.saveAll(gitLabIntegration.getSongs(user.getGitlabToken(),
-                    gitLabIntegration.getUserHandle(user.getGitlabToken()), user.getGitlabRepositoryName()));
+            songService.saveAll(gitLabIntegration.getSongs(user));
     }
 }

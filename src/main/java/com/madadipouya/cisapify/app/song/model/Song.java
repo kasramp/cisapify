@@ -1,5 +1,6 @@
 package com.madadipouya.cisapify.app.song.model;
 
+import com.madadipouya.cisapify.app.storage.StorageType;
 import com.madadipouya.cisapify.user.model.User;
 
 import javax.persistence.*;
@@ -35,6 +36,12 @@ public class Song {
     @Size(min = 16, max = 4096)
     private String uri;
 
+    @Column(name="source", nullable = false)
+    @NotBlank
+    @Size(max=128)
+    @Enumerated(EnumType.STRING)
+    private StorageType source;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -67,6 +74,14 @@ public class Song {
         this.uri = uri;
     }
 
+    public StorageType getSource() {
+        return source;
+    }
+
+    public void setSource(StorageType source) {
+        this.source = source;
+    }
+
     public User getUser() {
         return user;
     }
@@ -75,10 +90,8 @@ public class Song {
         this.user = user;
     }
 
-
-    @Transient
     public boolean isGitLabSourced() {
-        return getUri().contains("://gitlab.com/");
+        return StorageType.REMOTE_GIT_LAB == source;
     }
 
     public static SongBuilder Builder() {
@@ -110,6 +123,16 @@ public class Song {
 
         public SongBuilder withUser(User user) {
             song.setUser(user);
+            return this;
+        }
+
+        public SongBuilder withGitLabSource() {
+            song.setSource(StorageType.REMOTE_GIT_LAB);
+            return this;
+        }
+
+        public SongBuilder withLocalSource() {
+            song.setSource(StorageType.LOCAL_SIMPLE_FILESYSTEM);
             return this;
         }
 

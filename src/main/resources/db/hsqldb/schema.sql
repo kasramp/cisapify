@@ -86,6 +86,7 @@ CREATE TABLE songs (
   display_name VARCHAR(1024) NOT NULL,
   file_name VARCHAR(128) NOT NULL,
   uri VARCHAR(1024) NOT NULL,
+  source VARCHAR(128) NOT NULL,
   user_id INTEGER NOT NULL,
 
   CONSTRAINT uc_song_uri UNIQUE(uri),

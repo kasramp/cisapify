@@ -32,8 +32,13 @@
             <li class="nav-item">
                 <a class="nav-link" th:text="#{playerOld}" th:href="@{/user/player_old}"></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" th:text="#{playlists}" th:href="@{/user/playlists}"></a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
+                th:text="#{playlists}">Playlists</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" th:text="#{show}" th:href="@{/user/playlists}">Show</a>
+                    <a class="dropdown-item" th:text="#{create}" th:href="@{/user/playlists/create}">Create</a>
+                </div>
             </li>
             <li class="nav-item">
                 <a class="nav-link disabled" th:text="#{disabled}" href="#"></a>

@@ -3,7 +3,18 @@ package com.madadipouya.cisapify.app.song.model;
 import com.madadipouya.cisapify.app.storage.StorageType;
 import com.madadipouya.cisapify.user.model.User;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -36,15 +47,17 @@ public class Song {
     @Size(min = 16, max = 4096)
     private String uri;
 
-    @Column(name="source", nullable = false)
-    @NotBlank
-    @Size(max=128)
+    @Column(name = "source", nullable = false)
     @Enumerated(EnumType.STRING)
     private StorageType source;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Song() {
+        source = StorageType.LOCAL_SIMPLE_FILESYSTEM;
+    }
 
     public long getId() {
         return id;

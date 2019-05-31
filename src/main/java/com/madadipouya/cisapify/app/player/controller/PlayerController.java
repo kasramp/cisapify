@@ -4,13 +4,8 @@ import com.madadipouya.cisapify.app.playlist.exception.PlaylistNotExistException
 import com.madadipouya.cisapify.app.playlist.service.PlaylistService;
 import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.app.song.service.SongService;
-import com.madadipouya.cisapify.app.upload.service.UploadService;
-import com.madadipouya.cisapify.app.upload.service.exception.StorageFileNotFoundException;
-import com.madadipouya.cisapify.integration.gitlab.GitLabIntegration;
-import com.madadipouya.cisapify.integration.gitlab.exception.FailRetrievingRemoteObjectException;
-import com.madadipouya.cisapify.user.service.UserService;
+import com.madadipouya.cisapify.app.storage.store.exception.StoreException;
 import com.madadipouya.cisapify.util.ResourceURIBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.IOException;
-import java.net.URLDecoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
@@ -38,30 +31,21 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @RequestMapping("/user")
 public class PlayerController {
 
-    private final UploadService uploadService;
-
     private final PlaylistService playlistService;
 
     private final ResourceURIBuilder resourceURIBuilder;
 
-    @Autowired
-    private SongService songService;
+    private final SongService songService;
 
-    @Autowired
-    private GitLabIntegration gitLabIntegration;
-
-    @Autowired
-    private UserService userService;
-
-    public PlayerController(UploadService uploadService, PlaylistService playlistService) {
-        this.uploadService = uploadService;
+    public PlayerController(PlaylistService playlistService, SongService songService) {
         this.playlistService = playlistService;
+        this.songService = songService;
         this.resourceURIBuilder = new ResourceURIBuilder(PlayerController.class);
     }
 
     @GetMapping("/player_old")
     public String showOldPlayer(Model model, Authentication authentication) {
-        model.addAttribute("songs", uploadService.loadAllForUserEmail(authentication.getName()).stream()
+        model.addAttribute("songs", songService.getByEmailAddress(authentication.getName()).stream()
                 .collect(Collectors.toMap(song -> createSongsURI(Paths.get(song.getUri())), Song::getDisplayName)));
         return "app/player/player_old.html";
     }
@@ -74,7 +58,6 @@ public class PlayerController {
         } else {
             model.addAttribute("songsUri", "/user/songs");
         }
-
         return "app/player/player.html";
     }
 
@@ -86,22 +69,15 @@ public class PlayerController {
 
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws StorageFileNotFoundException, IOException, FailRetrievingRemoteObjectException {
-        filename = new String(Base64.getDecoder().decode(filename), UTF_8);
-        Resource file;
-        Song song = songService.findByUri(filename);
-        if(song.isGitLabSourced()) {
-           file = uploadService.load(gitLabIntegration.loadRemoteSong(userService.getCurrentUser().getGitlabToken(), song));
-        } else {
-            file = uploadService.load(URLDecoder.decode(Path.of(filename).getFileName().toString(), UTF_8));
-        }
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws StoreException {
+        Resource file = songService.serve(new String(Base64.getDecoder().decode(filename), UTF_8));
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
     @GetMapping(value = "/songs", produces = "application/json")
     public ResponseEntity<List<SongDto>> getAllUserSongs(Authentication authentication) {
-        return ResponseEntity.ok(userService.getCurrentUser().getSongs().stream().map(this::convertToSongDto)
+        return ResponseEntity.ok(songService.getByEmailAddress(authentication.getName()).stream().map(this::convertToSongDto)
                 .collect(Collectors.toList()));
     }
 

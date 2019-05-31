@@ -4,6 +4,8 @@ import java.nio.file.Path;
 import java.util.List;
 
 import com.madadipouya.cisapify.app.song.model.Song;
+import com.madadipouya.cisapify.app.storage.store.exception.StoreException;
+import org.springframework.core.io.Resource;
 
 public interface SongService {
 
@@ -28,6 +30,9 @@ public interface SongService {
      */
     List<Song> getByUserId(long userId);
 
+
+    List<Song> getByEmailAddress(String emailAddress);
+
     /**
      * Retrieves a {@link Song} by {@link Song#id}
      * @param songId to lookup
@@ -40,4 +45,6 @@ public interface SongService {
     void deleteAll(List<Song> songs);
 
     void saveAll(List<Song> songs);
+
+    Resource serve(String songUri) throws StoreException;
 }

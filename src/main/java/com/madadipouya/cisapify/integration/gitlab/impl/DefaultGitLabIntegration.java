@@ -98,6 +98,7 @@ public class DefaultGitLabIntegration implements GitLabIntegration {
                 .withDisplayName(response.getName())
                 .withFileName(response.getId())
                 .withUri(String.format(BLOB_URL, userHandle, user.getGitlabRepositoryName(), response.getId()))
+                .withGitLabSource()
                 .build();
     }
 

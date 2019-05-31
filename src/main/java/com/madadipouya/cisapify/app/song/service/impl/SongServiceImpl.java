@@ -3,6 +3,10 @@ package com.madadipouya.cisapify.app.song.service.impl;
 import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.app.song.repository.SongRepository;
 import com.madadipouya.cisapify.app.song.service.SongService;
+import com.madadipouya.cisapify.app.storage.service.SongStorageService;
+import com.madadipouya.cisapify.app.storage.store.exception.StoreException;
+import com.madadipouya.cisapify.user.service.UserService;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
@@ -13,8 +17,14 @@ public class SongServiceImpl implements SongService {
 
     private final SongRepository songRepository;
 
-    public SongServiceImpl(SongRepository songRepository) {
+    private final UserService userService;
+
+    private final SongStorageService storageService;
+
+    public SongServiceImpl(SongRepository songRepository, UserService userService, SongStorageService storageService) {
         this.songRepository = songRepository;
+        this.userService = userService;
+        this.storageService = storageService;
     }
 
     @Override
@@ -43,6 +53,11 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
+    public List<Song> getByEmailAddress(String emailAddress) {
+        return getByUserId(userService.getCurrentUser().getId());
+    }
+
+    @Override
     public void deleteAll(List<Song> songs) {
         songRepository.deleteAll(songs);
     }
@@ -50,5 +65,10 @@ public class SongServiceImpl implements SongService {
     @Override
     public void saveAll(List<Song> songs) {
         songRepository.saveAll(songs);
+    }
+
+    @Override
+    public Resource serve(String songUri) throws StoreException {
+        return storageService.load(findByUri(songUri));
     }
 }

@@ -2,6 +2,7 @@ package com.madadipouya.cisapify.user.model;
 
 import com.madadipouya.cisapify.app.playlist.model.Playlist;
 import com.madadipouya.cisapify.app.song.model.Song;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -57,7 +58,7 @@ public class User {
     @Size(max = 512)
     private String gitlabRepositoryName;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Song> songs;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -133,5 +134,9 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public boolean hasValidGitSettings() {
+        return StringUtils.isNotBlank(gitlabToken) && StringUtils.isNotBlank(gitlabRepositoryName);
     }
 }

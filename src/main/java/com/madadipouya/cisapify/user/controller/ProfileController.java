@@ -1,6 +1,6 @@
 package com.madadipouya.cisapify.user.controller;
 
-import com.madadipouya.cisapify.integration.gitlab.listener.ReindexGitLabSongsListener;
+import com.madadipouya.cisapify.integration.gitlab.GitLabSongIndexer;
 import com.madadipouya.cisapify.user.metadata.ConfirmPassword;
 import com.madadipouya.cisapify.user.model.User;
 import com.madadipouya.cisapify.user.service.UserService;
@@ -22,9 +22,9 @@ import javax.validation.constraints.NotBlank;
 @RequestMapping("/user/profile")
 public class ProfileController {
 
-    //TODO remove it later
+    // TODO move this to userService and perform reindexing after save
     @Autowired
-    private ReindexGitLabSongsListener reindexGitLabSongsListener;
+    private GitLabSongIndexer gitLabSongIndexer;
 
     private final UserService userService;
 
@@ -42,14 +42,16 @@ public class ProfileController {
     public ModelAndView editProfile(@Validated @ModelAttribute("command") UserCommand command) {
         User user = userService.getCurrentUser();
         boolean isPasswordUpdated = !StringUtils.equals(user.getPassword(), command.getPassword());
-        if(isPasswordUpdated) {
+        if (isPasswordUpdated) {
             user.setPassword(command.getPassword());
         }
         user.setEmailAddress(command.getEmailAddress());
         user.setGitlabToken(command.getGitlabToken());
         user.setGitlabRepositoryName(command.getGitlabRepositoryName());
         userService.save(user, isPasswordUpdated);
-        reindexGitLabSongsListener.reindexGitLabSongsAsync();
+        if (user.hasValidGitSettings()) {
+            gitLabSongIndexer.reindexGitLabSongsAsync(user);
+        }
         return new ModelAndView("redirect:/user/profile?success");
     }
 

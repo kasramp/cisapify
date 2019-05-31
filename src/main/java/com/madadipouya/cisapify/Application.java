@@ -16,6 +16,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -24,6 +26,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @SpringBootApplication
+@EnableScheduling
+@EnableAsync
 public class Application {
 
     public static void main(String[] args) {
@@ -61,8 +65,10 @@ public class Application {
             user.setPassword("12345");
             user.setEmailAddress("kasra@madadipouya.com");
             user.setSongs(Set.of());
-            user.setGitlabRepositoryName("Gitlab repository");
-            user.setGitlabToken("Gitlab Token");
+            user.setGitlabRepositoryName(null);
+            user.setGitlabToken(null);
+            //user.setGitlabRepositoryName("Gitlab repository");
+            //user.setGitlabToken("Gitlab Token");
             user.setEnabled(true);
             user.setRoles(Set.of(adminRole));
             userService.save(user);

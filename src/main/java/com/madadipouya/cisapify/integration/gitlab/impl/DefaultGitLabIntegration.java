@@ -40,12 +40,6 @@ public class DefaultGitLabIntegration implements GitLabIntegration {
 
     private final RestTemplate restTemplate;
 
-    //https://gitlab.com/api/v4/projects/kasramp%2Fmz/repository/blobs/e8e6c02267331817da62defde1ec8363c200fdc0/raw
-
-    // https://gitlab.com/api/v4/projects/kasramp%2Fmz/repository/tree?recursive=true
-    // https://gitlab.com/api/v4/projects/kasramp%2Fmz/repository/tree?path=Singles
-
-
     private DefaultGitLabIntegration(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }

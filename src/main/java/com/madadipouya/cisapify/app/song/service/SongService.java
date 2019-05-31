@@ -33,6 +33,8 @@ public interface SongService {
      */
     List<Song> getAllForCurrentUser();
 
+    List<Song> getAllByUserId(long userId);
+
     /**
      * Retrieves a {@link Song} by {@link Song#id}
      *

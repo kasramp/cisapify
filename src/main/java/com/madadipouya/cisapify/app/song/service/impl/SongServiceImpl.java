@@ -4,10 +4,12 @@ import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.app.song.repository.SongRepository;
 import com.madadipouya.cisapify.app.song.service.SongService;
 import com.madadipouya.cisapify.app.storage.service.SongStorageService;
+import com.madadipouya.cisapify.app.storage.store.StoredFileDetails;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreException;
 import com.madadipouya.cisapify.user.service.UserService;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -70,5 +72,16 @@ public class SongServiceImpl implements SongService {
     @Override
     public Resource serve(String songUri) throws StoreException {
         return storageService.load(findByUri(songUri));
+    }
+
+    @Override
+    public String save(MultipartFile file) throws StoreException {
+        StoredFileDetails storedFileDetails = storageService.store(file);
+        songRepository.save(Song.Builder().withDisplayName(storedFileDetails.getDisplayName())
+                .withFileName(storedFileDetails.getFileName())
+                .withUri(storedFileDetails.getUri())
+                .withUser(userService.getCurrentUser())
+                .build());
+        return storedFileDetails.getDisplayName();
     }
 }

@@ -4,6 +4,7 @@ import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.app.storage.StorageType;
 import com.madadipouya.cisapify.app.storage.store.AbstractSongStore;
 import com.madadipouya.cisapify.app.storage.store.SongStore;
+import com.madadipouya.cisapify.app.storage.store.StoredFileDetails;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreException;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreFileNotFoundException;
 import com.madadipouya.cisapify.i18n.service.I18nService;
@@ -46,7 +47,7 @@ public class LocalFilesystemSongStore extends AbstractSongStore implements SongS
     }
 
     @Override
-    public String store(MultipartFile file, User user) throws StoreException {
+    public StoredFileDetails store(MultipartFile file) throws StoreException {
         String displayName = sanitize(file.getOriginalFilename());
         String storedFileName = generateRandomFileName(displayName);
         if (file.isEmpty()) {
@@ -59,7 +60,7 @@ public class LocalFilesystemSongStore extends AbstractSongStore implements SongS
         try (InputStream inputStream = file.getInputStream()) {
             Path fileFullPath = rootLocation.resolve(storedFileName);
             Files.copy(inputStream, fileFullPath, StandardCopyOption.REPLACE_EXISTING);
-            return fileFullPath.toString();
+            return new StoredFileDetails(storedFileName, fileFullPath.toString(), displayName);
         } catch (IOException e) {
             throw new StoreException(i18nService.getMessage("upload.service.failToStoreFile", displayName), e);
         }

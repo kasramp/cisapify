@@ -31,6 +31,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @RequestMapping("/user")
 public class PlayerController {
 
+    private final String HEADER_VALUE_ATTACHMENT = "attachment; filename=\"%s\"";
+
     private final PlaylistService playlistService;
 
     private final ResourceURIBuilder resourceURIBuilder;
@@ -63,7 +65,9 @@ public class PlayerController {
 
     @GetMapping("/play/{songName}")
     public String playSong(@PathVariable String songName, Model model) {
-        model.addAttribute("file", resourceURIBuilder.withClearState().withMethodName("serveFile").withParameters(songName).build());
+        model.addAttribute("file", resourceURIBuilder.withClearState()
+                .withMethodName("serveFile")
+                .withParameters(songName).build());
         return "app/player/player_old.html";
     }
 
@@ -72,18 +76,23 @@ public class PlayerController {
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws StoreException {
         Resource file = songService.serve(new String(Base64.getDecoder().decode(filename), UTF_8));
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+                String.format(HEADER_VALUE_ATTACHMENT, file.getFilename()))
+                .body(file);
     }
 
     @GetMapping(value = "/songs", produces = "application/json")
     public ResponseEntity<List<SongDto>> getAllUserSongs(Authentication authentication) {
-        return ResponseEntity.ok(songService.getByEmailAddress(authentication.getName()).stream().map(this::convertToSongDto)
+        return ResponseEntity.ok(songService.getByEmailAddress(authentication.getName())
+                .stream().map(this::convertToSongDto)
                 .collect(Collectors.toList()));
     }
 
     @GetMapping(value = "/songs/playlist/{playlistId}", produces = "application/json")
     public ResponseEntity<List<SongDto>> getSongsForPlaylist(@PathVariable long playlistId) throws PlaylistNotExistException {
-        return ResponseEntity.ok(playlistService.getSongs(playlistId).stream().map(this::convertToSongDto).collect(Collectors.toList()));
+        return ResponseEntity.ok(playlistService.getSongs(playlistId)
+                .stream()
+                .map(this::convertToSongDto)
+                .collect(Collectors.toList()));
     }
 
     private String createSongsURI(Path path) {

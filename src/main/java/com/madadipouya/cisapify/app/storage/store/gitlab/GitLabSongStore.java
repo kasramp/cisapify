@@ -4,12 +4,12 @@ import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.app.storage.StorageType;
 import com.madadipouya.cisapify.app.storage.store.AbstractSongStore;
 import com.madadipouya.cisapify.app.storage.store.SongStore;
+import com.madadipouya.cisapify.app.storage.store.StoredFileDetails;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreException;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreOperationNotSupportedException;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreRemoteObjectRetrievingException;
 import com.madadipouya.cisapify.integration.gitlab.GitLabIntegration;
 import com.madadipouya.cisapify.integration.gitlab.exception.FailRetrievingRemoteObjectException;
-import com.madadipouya.cisapify.user.model.User;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,7 +35,7 @@ public class GitLabSongStore extends AbstractSongStore implements SongStore {
     }
 
     @Override
-    public String store(MultipartFile file, User user) {
+    public StoredFileDetails store(MultipartFile file) {
         throw new StoreOperationNotSupportedException("GitLab store does not support store/save mode.");
     }
 

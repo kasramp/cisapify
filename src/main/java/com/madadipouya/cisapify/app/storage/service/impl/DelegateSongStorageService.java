@@ -3,8 +3,8 @@ package com.madadipouya.cisapify.app.storage.service.impl;
 import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.app.storage.service.SongStorageService;
 import com.madadipouya.cisapify.app.storage.store.SongStoreFactory;
+import com.madadipouya.cisapify.app.storage.store.StoredFileDetails;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreException;
-import com.madadipouya.cisapify.user.model.User;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,8 +24,8 @@ public class DelegateSongStorageService implements SongStorageService {
     }
 
     @Override
-    public void store(MultipartFile file, User user) throws StoreException {
-        songStoreFactory.getStore().store(file, user);
+    public StoredFileDetails store(MultipartFile file) throws StoreException {
+        return songStoreFactory.getStore().store(file);
     }
 
     @Override

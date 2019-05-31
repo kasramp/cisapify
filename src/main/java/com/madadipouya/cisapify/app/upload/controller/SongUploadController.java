@@ -1,7 +1,7 @@
 package com.madadipouya.cisapify.app.upload.controller;
 
-import com.madadipouya.cisapify.app.upload.service.UploadService;
-import com.madadipouya.cisapify.app.upload.service.exception.StorageException;
+import com.madadipouya.cisapify.app.song.service.SongService;
+import com.madadipouya.cisapify.app.storage.store.exception.StoreException;
 import com.madadipouya.cisapify.i18n.service.I18nService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -16,19 +16,21 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/user")
 public class SongUploadController {
 
-    private final UploadService uploadService;
+    //private final UploadService uploadService;
+
+    private final SongService songService;
 
     private final I18nService i18nService;
 
-    public SongUploadController(UploadService uploadService, I18nService i18nService) {
-        this.uploadService = uploadService;
+    public SongUploadController(SongService songService, I18nService i18nService) {
+        this.songService = songService;
         this.i18nService = i18nService;
     }
 
     @PostMapping("/upload")
-    public String doUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes, Authentication authentication) throws StorageException {
-        uploadService.store(file, authentication.getName());
-        redirectAttributes.addFlashAttribute("message", i18nService.getMessage("upload.controller.successFileUpload", file.getOriginalFilename()));
+    public String doUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes, Authentication authentication) throws StoreException {
+        redirectAttributes.addFlashAttribute("message",
+                i18nService.getMessage("upload.controller.successFileUpload", songService.save(file)));
         return "redirect:/user/upload";
     }
 

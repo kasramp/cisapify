@@ -6,6 +6,7 @@ import java.util.List;
 import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreException;
 import org.springframework.core.io.Resource;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface SongService {
 
@@ -47,4 +48,6 @@ public interface SongService {
     void saveAll(List<Song> songs);
 
     Resource serve(String songUri) throws StoreException;
+
+    String save(MultipartFile file) throws StoreException;
 }

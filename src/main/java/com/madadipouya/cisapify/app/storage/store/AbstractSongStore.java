@@ -19,11 +19,11 @@ public abstract class AbstractSongStore implements SongStore {
         try {
             Resource resource = new UrlResource(path.toUri());
             if (!isValidResource(resource)) {
-                throw new StoreFileNotFoundException(String.format("File (%s) now found", path.getFileName()));
+                throw new StoreFileNotFoundException(String.format("File (%s) not found", path.getFileName()));
             }
             return resource;
         } catch (MalformedURLException e) {
-            throw new StoreFileNotFoundException(String.format("File (%s) now found", path.getFileName()), e);
+            throw new StoreFileNotFoundException(String.format("File (%s) not found", path.getFileName()), e);
         }
     }
 

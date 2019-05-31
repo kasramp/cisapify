@@ -49,14 +49,14 @@ public class SongServiceImpl implements SongService {
         return songRepository.findByUri(uri);
     }
 
-    @Override
+    /*@Override
     public List<Song> getByUserId(long userId) {
         return songRepository.findByUserId(userId);
-    }
+    }*/
 
     @Override
-    public List<Song> getByEmailAddress(String emailAddress) {
-        return getByUserId(userService.getCurrentUser().getId());
+    public List<Song> getAllForCurrentUser() {
+        return songRepository.findByUser(userService.getCurrentUser());
     }
 
     @Override

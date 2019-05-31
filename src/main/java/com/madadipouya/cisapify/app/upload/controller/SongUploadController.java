@@ -3,7 +3,6 @@ package com.madadipouya.cisapify.app.upload.controller;
 import com.madadipouya.cisapify.app.song.service.SongService;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreException;
 import com.madadipouya.cisapify.i18n.service.I18nService;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,9 +14,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/user")
 public class SongUploadController {
-
-    //private final UploadService uploadService;
-
     private final SongService songService;
 
     private final I18nService i18nService;
@@ -28,7 +24,7 @@ public class SongUploadController {
     }
 
     @PostMapping("/upload")
-    public String doUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes, Authentication authentication) throws StoreException {
+    public String doUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) throws StoreException {
         redirectAttributes.addFlashAttribute("message",
                 i18nService.getMessage("upload.controller.successFileUpload", songService.save(file)));
         return "redirect:/user/upload";

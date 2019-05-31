@@ -2,10 +2,9 @@ package com.madadipouya.cisapify.app.playlist.controller;
 
 import com.madadipouya.cisapify.app.playlist.model.Playlist;
 import com.madadipouya.cisapify.app.playlist.service.PlaylistService;
-import com.madadipouya.cisapify.app.upload.service.UploadService;
+import com.madadipouya.cisapify.app.song.service.SongService;
 import com.madadipouya.cisapify.user.model.User;
 import com.madadipouya.cisapify.user.service.UserService;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,12 +26,12 @@ public class PlaylistController {
 
     private final UserService userService;
 
-    private final UploadService uploadService;
+    private final SongService songService;
 
-    public PlaylistController(PlaylistService playlistService, UserService userService, UploadService uploadService) {
+    public PlaylistController(PlaylistService playlistService, UserService userService, SongService songService) {
         this.playlistService = playlistService;
         this.userService = userService;
-        this.uploadService = uploadService;
+        this.songService = songService;
     }
 
     @GetMapping("/playlists")
@@ -49,9 +48,9 @@ public class PlaylistController {
     }
 
     @GetMapping("/playlists/create")
-    public String showCreatePlaylist(Model model, Authentication authentication) {
+    public String showCreatePlaylist(Model model) {
         model.addAllAttributes(Map.of("command", new PlayListCommand(),
-                "allUserSongs", uploadService.loadAllForUserEmail(authentication.getName())));
+                "allUserSongs", songService.getAllForCurrentUser()));
         return "app/playlist/playlist_create.html";
     }
 

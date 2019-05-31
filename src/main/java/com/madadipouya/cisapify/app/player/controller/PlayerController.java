@@ -9,7 +9,6 @@ import com.madadipouya.cisapify.util.ResourceURIBuilder;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,8 +45,8 @@ public class PlayerController {
     }
 
     @GetMapping("/player_old")
-    public String showOldPlayer(Model model, Authentication authentication) {
-        model.addAttribute("songs", songService.getByEmailAddress(authentication.getName()).stream()
+    public String showOldPlayer(Model model) {
+        model.addAttribute("songs", songService.getAllForCurrentUser().stream()
                 .collect(Collectors.toMap(song -> createSongsURI(Paths.get(song.getUri())), Song::getDisplayName)));
         return "app/player/player_old.html";
     }
@@ -81,8 +80,8 @@ public class PlayerController {
     }
 
     @GetMapping(value = "/songs", produces = "application/json")
-    public ResponseEntity<List<SongDto>> getAllUserSongs(Authentication authentication) {
-        return ResponseEntity.ok(songService.getByEmailAddress(authentication.getName())
+    public ResponseEntity<List<SongDto>> getAllUserSongs() {
+        return ResponseEntity.ok(songService.getAllForCurrentUser()
                 .stream().map(this::convertToSongDto)
                 .collect(Collectors.toList()));
     }

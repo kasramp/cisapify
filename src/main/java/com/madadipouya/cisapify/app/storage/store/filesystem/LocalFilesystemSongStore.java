@@ -8,7 +8,6 @@ import com.madadipouya.cisapify.app.storage.store.StoredFileDetails;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreException;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreFileNotFoundException;
 import com.madadipouya.cisapify.i18n.service.I18nService;
-import com.madadipouya.cisapify.user.model.User;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RegExUtils;
 import org.springframework.core.io.Resource;

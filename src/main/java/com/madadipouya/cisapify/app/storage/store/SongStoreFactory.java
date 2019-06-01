@@ -2,7 +2,6 @@ package com.madadipouya.cisapify.app.storage.store;
 
 import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.app.storage.StorageType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -13,10 +12,13 @@ import java.util.stream.Collectors;
 @Component
 public class SongStoreFactory {
 
-    @Autowired
-    private List<SongStore> stores;
+    private final List<SongStore> stores;
 
     private Map<StorageType, SongStore> storesMap;
+
+    public SongStoreFactory(List<SongStore> stores) {
+        this.stores = stores;
+    }
 
     @PostConstruct
     public void afterPropertiesSet() {

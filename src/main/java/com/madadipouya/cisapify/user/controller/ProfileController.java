@@ -5,7 +5,6 @@ import com.madadipouya.cisapify.user.metadata.ConfirmPassword;
 import com.madadipouya.cisapify.user.model.User;
 import com.madadipouya.cisapify.user.service.UserService;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -22,14 +21,13 @@ import javax.validation.constraints.NotBlank;
 @RequestMapping("/user/profile")
 public class ProfileController {
 
-    // TODO move this to userService and perform reindexing after save
-    @Autowired
-    private GitLabSongIndexer gitLabSongIndexer;
+    private final GitLabSongIndexer gitLabSongIndexer;
 
     private final UserService userService;
 
-    public ProfileController(UserService userService) {
+    public ProfileController(UserService userService, GitLabSongIndexer gitLabSongIndexer) {
         this.userService = userService;
+        this.gitLabSongIndexer = gitLabSongIndexer;
     }
 
     @GetMapping
@@ -86,15 +84,6 @@ public class ProfileController {
 
         }
 
-        private static UserCommand transform(User user) {
-            return new UserCommand(user.getEmailAddress(),
-                    user.getPassword(),
-                    user.getPassword(),
-                    user.getGitlabToken(),
-                    user.getGitlabRepositoryName()
-            );
-        }
-
         public String getEmailAddress() {
             return emailAddress;
         }
@@ -133,6 +122,15 @@ public class ProfileController {
 
         public void setGitlabRepositoryName(String gitlabRepositoryName) {
             this.gitlabRepositoryName = gitlabRepositoryName;
+        }
+
+        private static UserCommand transform(User user) {
+            return new UserCommand(user.getEmailAddress(),
+                    user.getPassword(),
+                    user.getPassword(),
+                    user.getGitlabToken(),
+                    user.getGitlabRepositoryName()
+            );
         }
     }
 }

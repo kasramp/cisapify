@@ -32,7 +32,7 @@ public class GitLabSongIndexer {
 
     // Run every 30 minutes
     @Scheduled(cron = "0 0/30 * * * ?")
-    public void reindexAllUsersGitLabSongs() {
+    protected void reindexAllUsersGitLabSongs() {
         logger.info("Started reindexing GitLab songs for all users");
         List<User> users = userService.getAll();
         users.stream().filter(User::hasValidGitSettings).forEach(this::updateGitLabSongs);

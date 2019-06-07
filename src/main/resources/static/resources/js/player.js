@@ -67,6 +67,7 @@ Player.prototype = {
         //src: ['./audio/' + data.file + '.webm', './audio/' + data.file + '.mp3'],
         src: [data.file],
         html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
+        preload: true, // Fetch in advance
         onplay: function() {
           // Display the duration.
           duration.innerHTML = self.formatTime(Math.round(sound.duration()));

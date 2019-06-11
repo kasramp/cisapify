@@ -4,6 +4,7 @@ import com.madadipouya.cisapify.app.playlist.model.Playlist;
 import com.madadipouya.cisapify.app.playlist.service.PlaylistService;
 import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.app.song.service.SongService;
+import com.madadipouya.cisapify.integration.dropbox.impl.DefaultDropboxIntegration;
 import com.madadipouya.cisapify.user.model.Role;
 import com.madadipouya.cisapify.user.model.User;
 import com.madadipouya.cisapify.user.repository.RoleRepository;

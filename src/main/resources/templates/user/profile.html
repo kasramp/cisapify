@@ -9,6 +9,7 @@
     <h2 th:text="${message}"/>
 </div>
 
+<div th:if="${param.error}" class="alert alert-danger" th:text="#{profileUpdatedFailed}"></div>
 <div th:if="${param.success}" class="alert alert-success" th:text="#{profileUpdated}"></div>
 <form action="#" th:action="@{/user/profile}" th:object="${command}" method="post">
     <div class="container">
@@ -44,9 +45,15 @@
             <p th:each="error: ${#fields.errors('gitlabRepositoryName')}"
                th:text="${error}">Validation error</p>
         </div>
+        <div class="form-group">
+            <label th:text="#{dropboxConnection}"></label>
+            <button class="btn btn-lg btn-block btn-success" id="dropbox-authentication" th:text="#{dropboxConnect}"></button>
+        </div>
     </div>
     <button class="btn btn-lg btn-block btn-success" type="submit" th:text="#{submit}"></button>
 </form>
 
+<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
 </body>
 </html>

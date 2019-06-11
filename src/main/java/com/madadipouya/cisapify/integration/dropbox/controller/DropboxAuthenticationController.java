@@ -24,6 +24,7 @@ public class DropboxAuthenticationController {
 
     private static final Logger logger = LoggerFactory.getLogger(DropboxAuthenticationController.class);
 
+    // TODO remove autowire
     @Autowired
     private DefaultDropboxIntegration dropboxIntegration;
 
@@ -42,10 +43,10 @@ public class DropboxAuthenticationController {
         // TODO add more message to success or failure
         try {
             dropboxIntegration.finishAuthentication(request);
-            response.sendRedirect("/user/profile?success");
+            response.sendRedirect(request.getContextPath() + "/user/profile?success");
         } catch (DropboxIntegrationException dropboxIntegrationException) {
             logger.warn("Failed to get finish authorization to Dropbox", dropboxIntegrationException);
         }
-        response.sendRedirect("user/profile?error");
+        response.sendRedirect(request.getContextPath() + "/user/profile?error");
     }
 }

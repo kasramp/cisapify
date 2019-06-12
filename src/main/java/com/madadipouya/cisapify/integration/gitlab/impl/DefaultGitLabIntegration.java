@@ -3,7 +3,7 @@ package com.madadipouya.cisapify.integration.gitlab.impl;
 import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.integration.base.exception.SongsListRetrievalException;
 import com.madadipouya.cisapify.integration.gitlab.GitLabIntegration;
-import com.madadipouya.cisapify.integration.gitlab.exception.FailRetrievingRemoteObjectException;
+import com.madadipouya.cisapify.integration.base.exception.FailRetrievingRemoteObjectException;
 import com.madadipouya.cisapify.integration.gitlab.remote.response.RepositoryTreeResponse;
 import com.madadipouya.cisapify.integration.gitlab.remote.response.UserResponse;
 import com.madadipouya.cisapify.user.model.User;

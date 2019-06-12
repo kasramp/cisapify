@@ -12,6 +12,7 @@ import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.Metadata;
 import com.madadipouya.cisapify.app.song.model.Song;
+import com.madadipouya.cisapify.integration.base.exception.FailRetrievingRemoteObjectException;
 import com.madadipouya.cisapify.integration.base.exception.SongsListRetrievalException;
 import com.madadipouya.cisapify.integration.dropbox.DropboxIntegration;
 import com.madadipouya.cisapify.integration.dropbox.exception.DropboxIntegrationException;
@@ -28,6 +29,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -97,6 +100,21 @@ public class DefaultDropboxIntegration implements DropboxIntegration {
                     .collect(Collectors.toList());
         } catch (DbxException dropboxException) {
             throw new SongsListRetrievalException("Fail to retrieve songs list", dropboxException);
+        }
+    }
+
+    @Override
+    public Path loadRemoteSong(String token, Song song) throws FailRetrievingRemoteObjectException, IOException {
+        try {
+            DbxClientV2 client = new DbxClientV2(getRequestConfig(), token);
+            Path storedPath = Path.of(String.format("/tmp/%s.mp3", song.getFileName()));
+            if (!Files.exists(storedPath)) {
+                Files.copy(client.files().download(song.getUri()).getInputStream(), storedPath);
+            }
+            return storedPath;
+        } catch (DbxException dropboxException) {
+            throw new FailRetrievingRemoteObjectException(
+                    String.format("Unable to retrieve song blob for song id: %s", song.getId()), dropboxException);
         }
     }
 

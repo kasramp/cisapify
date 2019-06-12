@@ -1,5 +1,6 @@
 package com.madadipouya.cisapify.user.controller;
 
+import com.madadipouya.cisapify.integration.dropbox.DropboxSongIndexer;
 import com.madadipouya.cisapify.integration.gitlab.GitLabSongIndexer;
 import com.madadipouya.cisapify.user.metadata.ConfirmPassword;
 import com.madadipouya.cisapify.user.model.User;
@@ -70,17 +71,20 @@ public class ProfileController {
 
         private String gitlabRepositoryName;
 
+        private String dropboxToken;
+
         public UserCommand() {
 
         }
 
         private UserCommand(String emailAddress, String password, String confirmPassword,
-                            String gitlabToken, String gitlabRepositoryName) {
+                            String gitlabToken, String gitlabRepositoryName, String dropboxToken) {
             this.emailAddress = emailAddress;
             this.password = password;
             this.confirmPassword = confirmPassword;
             this.gitlabToken = gitlabToken;
             this.gitlabRepositoryName = gitlabRepositoryName;
+            this.dropboxToken = dropboxToken;
 
         }
 
@@ -124,12 +128,17 @@ public class ProfileController {
             this.gitlabRepositoryName = gitlabRepositoryName;
         }
 
+        public String getDropboxToken() {
+            return dropboxToken;
+        }
+
         private static UserCommand transform(User user) {
             return new UserCommand(user.getEmailAddress(),
                     user.getPassword(),
                     user.getPassword(),
                     user.getGitlabToken(),
-                    user.getGitlabRepositoryName()
+                    user.getGitlabRepositoryName(),
+                    user.getDropboxToken()
             );
         }
     }

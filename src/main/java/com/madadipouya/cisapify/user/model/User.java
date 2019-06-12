@@ -58,6 +58,10 @@ public class User {
     @Size(max = 512)
     private String gitlabRepositoryName;
 
+    @Column(name = "dropbox_token")
+    @Size(max = 128)
+    private String dropboxToken;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Song> songs;
 
@@ -112,6 +116,14 @@ public class User {
         this.gitlabRepositoryName = gitlabRepositoryName;
     }
 
+    public String getDropboxToken() {
+        return dropboxToken;
+    }
+
+    public void setDropboxToken(String dropboxToken) {
+        this.dropboxToken = dropboxToken;
+    }
+
     public Set<Song> getSongs() {
         return songs;
     }
@@ -138,5 +150,9 @@ public class User {
 
     public boolean hasValidGitSettings() {
         return StringUtils.isNotBlank(gitlabToken) && StringUtils.isNotBlank(gitlabRepositoryName);
+    }
+
+    public boolean hasValidDropboxToken() {
+        return StringUtils.isNotBlank(dropboxToken);
     }
 }

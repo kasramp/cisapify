@@ -1,4 +1,4 @@
-package com.madadipouya.cisapify.integration.gitlab;
+package com.madadipouya.cisapify.integration.dropbox;
 
 import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.app.song.service.SongService;
@@ -15,49 +15,48 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class GitLabSongIndexer {
+public class DropboxSongIndexer {
 
-    private static final Logger logger = LoggerFactory.getLogger(GitLabSongIndexer.class);
+    private static final Logger logger = LoggerFactory.getLogger(DropboxSongIndexer.class);
 
-    private final GitLabIntegration gitLabIntegration;
+    private final DropboxIntegration dropboxIntegration;
 
     private final UserService userService;
 
     private final SongService songService;
 
-    public GitLabSongIndexer(GitLabIntegration gitLabIntegration, UserService userService, SongService songService) {
-        this.gitLabIntegration = gitLabIntegration;
+    public DropboxSongIndexer(DropboxIntegration dropboxIntegration, UserService userService, SongService songService) {
+        this.dropboxIntegration = dropboxIntegration;
         this.userService = userService;
         this.songService = songService;
     }
 
     // Run every 30 minutes
     @Scheduled(cron = "0 0/30 * * * ?")
-    protected void reindexAllUsersGitLabSongs() {
-        logger.info("Started reindexing GitLab songs for all users");
+    protected void reindexAllUsersDropboxSongs() {
+        logger.info("Started reindexing Dropbox songs for all users");
         List<User> users = userService.getAll();
-        users.stream().filter(User::hasValidGitSettings).forEach(this::updateGitLabSongs);
+        users.stream().filter(User::hasValidDropboxToken).forEach(this::updateDropboxSongs);
     }
 
     @Async
-    public void reindexGitLabSongsAsync(User user) {
-        updateGitLabSongs(user);
+    public void reindexDropboxSongsAsync(User user) {
+        updateDropboxSongs(user);
     }
 
-    void updateGitLabSongs(User user) {
+    void updateDropboxSongs(User user) {
         /* instead of using `user.getSongs`, we query db to avoid lazy loading exception
          * because the hibernate session is not available for this thread.
          * Hence, cannot initialize the lazy loaded songs
          */
         try {
-            List<Song> songs = gitLabIntegration.getSongs(user);
+            List<Song> songs = dropboxIntegration.getSongs(user);
             songService.deleteAll(songService.getAllByUserId(user.getId())
-                    .stream().filter(Song::isGitLabSourced)
+                    .stream().filter(Song::isDropboxSourced)
                     .collect(Collectors.toList()));
             songService.saveAll(songs);
         } catch (SongsListRetrievalException songsListRetrievalException) {
-            logger.warn("Indexer fail to get songs list of GitLab", songsListRetrievalException);
+            logger.warn("Indexer fail to get songs list of Dropbox", songsListRetrievalException);
         }
-
     }
 }

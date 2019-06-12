@@ -75,6 +75,7 @@ CREATE TABLE users (
   enabled BOOLEAN DEFAULT FALSE NOT NULL,
   gitlab_token VARCHAR(256),
   gitlab_repository_name VARCHAR(512),
+  dropbox_token VARCHAR(128),
   CONSTRAINT uc_user_email_address UNIQUE(email_address)
 );
 CREATE INDEX idx_user_email_address ON users (email_address);

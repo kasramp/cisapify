@@ -1,13 +1,8 @@
 package com.madadipouya.cisapify.integration.gitlab.remote.response;
 
-import org.apache.commons.io.FilenameUtils;
-
-import java.util.Set;
+import com.madadipouya.cisapify.util.SongUtil;
 
 public class RepositoryTreeResponse {
-
-    private static Set<String> AUDIO_FORMATS = Set.of("aac", "flac", "m4a", "m4b", "m4p", "mp3",
-            "mpc", "ogg", "oga", "wav", "wma", "webm");
 
     private String id;
 
@@ -44,7 +39,7 @@ public class RepositoryTreeResponse {
     }
 
     public boolean isAudioFile() {
-        return isFile() && AUDIO_FORMATS.contains(FilenameUtils.getExtension(name));
+        return isFile() && SongUtil.isAudioFile(name);
     }
 
     public boolean isDirectory() {

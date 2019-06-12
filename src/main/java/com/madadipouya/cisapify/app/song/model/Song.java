@@ -44,7 +44,7 @@ public class Song {
 
     @Column(name = "uri", nullable = false)
     @NotBlank
-    @Size(min = 16, max = 4096)
+    @Size(min = 5, max = 4096)
     private String uri;
 
     @Column(name = "source", nullable = false)
@@ -107,6 +107,10 @@ public class Song {
         return StorageType.REMOTE_GIT_LAB == source;
     }
 
+    public boolean isDropboxSourced() {
+        return StorageType.REMOTE_DROPBOX == source;
+    }
+
     public static SongBuilder Builder() {
         return new SongBuilder();
     }
@@ -146,6 +150,11 @@ public class Song {
 
         public SongBuilder withLocalSource() {
             song.setSource(StorageType.LOCAL_SIMPLE_FILESYSTEM);
+            return this;
+        }
+
+        public SongBuilder withDropboxSource() {
+            song.setSource(StorageType.REMOTE_DROPBOX);
             return this;
         }
 

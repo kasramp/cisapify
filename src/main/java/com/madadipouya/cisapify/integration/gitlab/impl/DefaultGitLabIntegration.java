@@ -1,6 +1,7 @@
 package com.madadipouya.cisapify.integration.gitlab.impl;
 
 import com.madadipouya.cisapify.app.song.model.Song;
+import com.madadipouya.cisapify.integration.base.exception.SongsListRetrievalException;
 import com.madadipouya.cisapify.integration.gitlab.GitLabIntegration;
 import com.madadipouya.cisapify.integration.gitlab.exception.FailRetrievingRemoteObjectException;
 import com.madadipouya.cisapify.integration.gitlab.remote.response.RepositoryTreeResponse;
@@ -53,7 +54,7 @@ public class DefaultGitLabIntegration implements GitLabIntegration {
     }
 
     @Override
-    public List<Song> getSongs(User user) {
+    public List<Song> getSongs(User user) throws SongsListRetrievalException {
         String token = user.getGitlabToken();
         String repositoryName = user.getGitlabRepositoryName();
         String userHandle = getUserHandle(token);
@@ -62,6 +63,10 @@ public class DefaultGitLabIntegration implements GitLabIntegration {
                 restTemplate.exchange(constructRepositoryUri(userHandle, repositoryName),
                         GET, createHeader(token), new ParameterizedTypeReference<Set<RepositoryTreeResponse>>() {
                         });
+
+        if(!responseEntity.getStatusCode().is2xxSuccessful()) {
+            throw new SongsListRetrievalException("Fail to retrieve songs list");
+        }
 
         return Optional.ofNullable(responseEntity.getBody())
                 .orElse(Set.of())

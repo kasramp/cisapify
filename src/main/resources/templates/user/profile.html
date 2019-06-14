@@ -5,55 +5,67 @@
 
 <body>
 
-<div th:if="${message}">
-    <h2 th:text="${message}"/>
-</div>
 
-<div th:if="${param.error}" class="alert alert-danger" th:text="#{profileUpdatedFailed}"></div>
-<div th:if="${param.success}" class="alert alert-success" th:text="#{profileUpdated}"></div>
-<form action="#" th:action="@{/user/profile}" th:object="${command}" method="post">
-    <div class="container">
-        <div class="form-group">
-            <label for="emailAddress" th:text="#{emailAddress}"></label>
-            <input type="text" class="form-control" id="emailAddress" th:field="*{emailAddress}">
-            <p th:each="error: ${#fields.errors('emailAddress')}"
-               th:text="${error}">Validation error</p>
+<div class="row">
+    <div class="col">
+        <h2>User profile</h2>
+        <hr class="mt-0 mb-4">
+        <div th:if="${message}">
+            <h3 th:text="${message}"/>
         </div>
 
-        <div class="form-group">
-            <label for="password" th:text="#{password}"></label>
-            <input type="password" class="form-control" id="password" name="password" th:value="${command.password}">
-            <p th:each="error: ${#fields.errors('password')}"
-               th:text="${error}">Validation error</p>
-        </div>
+        <div th:if="${param.error}" class="alert alert-danger" th:text="#{profileUpdatedFailed}"></div>
+        <div th:if="${param.success}" class="alert alert-success" th:text="#{profileUpdated}"></div>
+        <form action="#" th:action="@{/user/profile}" th:object="${command}" method="post">
+            <div class="form-group">
+                <label class="col-form-label" for="emailAddress" th:text="#{emailAddress}"></label>
+                <input class="form-control" type="text" id="emailAddress" th:field="*{emailAddress}">
+                <p th:each="error: ${#fields.errors('emailAddress')}"
+                   th:text="${error}">Validation error</p>
+            </div>
 
-        <div class="form-group">
-            <label for="confirmPassword" th:text="#{confirmPassword}"></label>
-            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" th:value="${command.confirmPassword}">
-            <p th:each="error: ${#fields.errors('confirmPassword')}"
-               th:text="${error}">Validation error</p>
-        </div>
-        <div class="form-group">
-            <label for="gitlabToken" th:text="#{gitlabToken}"></label>
-            <input type="text" class="form-control" id="gitlabToken" th:field="*{gitlabToken}">
-            <p th:each="error: ${#fields.errors('gitlabToken')}"
-               th:text="${error}">Validation error</p>
-        </div>
-        <div class="form-group">
-            <label for="gitlabRepositoryName" th:text="#{gitlabRepositoryName}"></label>
-            <input type="text" class="form-control" id="gitlabRepositoryName" th:field="*{gitlabRepositoryName}">
-            <p th:each="error: ${#fields.errors('gitlabRepositoryName')}"
-               th:text="${error}">Validation error</p>
-        </div>
-        <div class="form-group">
-            <label th:text="#{dropboxConnection}"></label>
-            <button class="btn btn-lg btn-block btn-success" id="dropbox-authentication"
-                    th:text="${#strings.isEmpty(command.dropboxToken)} ? #{dropboxConnect}: #{dropboxConnected}"
-                    th:disabled="!${#strings.isEmpty(command.dropboxToken)}"></button>
-        </div>
+            <div class="form-group">
+                <label for="password" th:text="#{password}"></label>
+                <input type="password" class="form-control" id="password" name="password"
+                       th:value="${command.password}">
+                <p th:each="error: ${#fields.errors('password')}"
+                   th:text="${error}">Validation error</p>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword" th:text="#{confirmPassword}"></label>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                       th:value="${command.confirmPassword}">
+                <p th:each="error: ${#fields.errors('confirmPassword')}"
+                   th:text="${error}">Validation error</p>
+            </div>
+            <div class="form-group">
+                <label for="gitlabToken" th:text="#{gitlabToken}"></label>
+                <input type="text" class="form-control" id="gitlabToken" th:field="*{gitlabToken}">
+                <p th:each="error: ${#fields.errors('gitlabToken')}"
+                   th:text="${error}">Validation error</p>
+            </div>
+            <div class="form-group">
+                <label for="gitlabRepositoryName" th:text="#{gitlabRepositoryName}"></label>
+                <input type="text" class="form-control" id="gitlabRepositoryName" th:field="*{gitlabRepositoryName}">
+                <p th:each="error: ${#fields.errors('gitlabRepositoryName')}"
+                   th:text="${error}">Validation error</p>
+            </div>
+            <div class="form-group">
+                <label th:text="#{dropboxConnection}"></label>
+                <button class="fab fa-dropbox btn btn-lg btn-block btn-success" id="dropbox-authentication"
+                        th:utext="${#strings.isEmpty(command.dropboxToken)} ? #{dropboxConnect}: #{dropboxConnected}"
+                        th:disabled="!${#strings.isEmpty(command.dropboxToken)}"></button>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-success" type="submit" th:text="#{submit}"></button>
+            </div>
+
+            <!--"btn btn-lg btn-block btn-success-->
+        </form>
     </div>
-    <button class="btn btn-lg btn-block btn-success" type="submit" th:text="#{submit}"></button>
-</form>
+</div>
+</div>
 
 <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
 <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>

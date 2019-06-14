@@ -8,62 +8,68 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/resources/css/styles.css}">
 
     <title th:text="#{cisapify}"></title>
 </head>
+
 <body>
 <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
-    <a class="navbar-brand" th:text="#{cisapify}" th:href="@{/}"></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item active">
-                <a class="nav-link" th:text="#{home}" th:href="@{/}"><span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:text="#{upload}" th:href="@{/user/upload}"></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:text="#{player}" th:href="@{/user/player}"></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:text="#{playerOld}" th:href="@{/user/player_old}"></a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
-                th:text="#{playlists}">Playlists</a>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" th:text="#{show}" th:href="@{/user/playlists}">Show</a>
-                    <a class="dropdown-item" th:text="#{create}" th:href="@{/user/playlists/create}">Create</a>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" th:text="#{disabled}" href="#"></a>
-            </li>
-        </ul>
-    </div>
-    <form class="form-inline my-2 my-lg-0">
-        <div th:switch="${#authentication}? ${#authorization.expression('isAuthenticated()')} : ${true}">
-            <a th:case="${false}" class="btn btn-outline-success my-2 my-sm-0" th:href="@{/login}">Login</a>
-            <button th:case="${true}" th:text="${#authentication.getName()}"
-                    class="btn btn-outline-success" type="button" id="profileMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            </button>
-            <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="profileMenuButton">
-                <a class="dropdown-item" th:text="#{profile}" th:href="@{/user/profile}"></a>
-                <a class="dropdown-item" th:text="#{logout}" th:href="@{/logout}"></a>
-            </div>
-        </div>
-    </form>
-</nav>
+    <div class="container-fluid">
+        <a class="navbar-brand" th:text="#{cisapify}" th:href="@{/}"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" th:text="#{home}" th:href="@{/}"><span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:text="#{upload}" th:href="@{/user/upload}"></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:text="#{player}" th:href="@{/user/player}"></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:text="#{playerOld}" th:href="@{/user/player_old}"></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                       aria-haspopup="true" aria-expanded="false"
+                       th:text="#{playlists}">Playlists</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" th:text="#{show}" th:href="@{/user/playlists}">Show</a>
+                        <a class="dropdown-item" th:text="#{create}" th:href="@{/user/playlists/create}">Create</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" th:text="#{disabled}" href="#"></a>
+                </li>
+            </ul>
 
-<div class="container-fluid">
-    <div class="container xd-container">
-        <th:block th:include="${template}"/>
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown"
+                    th:switch="${#authentication}? ${#authorization.expression('isAuthenticated()')} : ${true}">
+                    <a th:case="${false}" class="nav-link" th:href="@{/login}">Login</a>
+                    <a th:case="${true}" class="nav-link dropdown-toggle" th:text="${#authentication.getName()}"
+                       data-toggle="dropdown" href="#"
+                       aria-haspopup="true" aria-expanded="false"></a>
+                    <div class="dropdown-menu dropdown-menu-right login-dropdown-menu">
+                        <a class="dropdown-item" th:text="#{profile}" th:href="@{/user/profile}"></a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" th:text="#{logout}" th:href="@{/logout}"></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
-    <div class="navbar navbar-expand-lg fixed-bottom navbar-dark bg-dark">
+</nav>
+<div class="container mt-4">
+    <th:block th:include="${template}"/>
+
+    <div class="navbar fixed-bottom navbar-dark bg-dark">
         <span class="navbar-text" th:text="#{copyright}"></span>
     </div>
 </div>
@@ -78,6 +84,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
         integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/c58039e85e.js"></script>
 <script th:src="@{/resources/js/core.js}"></script>
 </body>
 </html>

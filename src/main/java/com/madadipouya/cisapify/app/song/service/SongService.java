@@ -2,6 +2,7 @@ package com.madadipouya.cisapify.app.song.service;
 
 import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreException;
+import com.madadipouya.cisapify.user.model.User;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,5 +52,7 @@ public interface SongService {
 
     Resource serve(String songUri) throws StoreException;
 
-    String save(MultipartFile file) throws StoreException;
+    String save(User user, MultipartFile file) throws StoreException;
+
+    long getSongsCount(User user);
 }

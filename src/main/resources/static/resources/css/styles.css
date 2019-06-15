@@ -2,4 +2,8 @@
     width: 100%;
 }
 
+.player-nav-link {
+    display: none;
+}
+
 body { padding-bottom: 70px; }

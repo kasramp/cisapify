@@ -6,7 +6,11 @@ import com.madadipouya.cisapify.app.song.service.SongService;
 import com.madadipouya.cisapify.app.storage.service.SongStorageService;
 import com.madadipouya.cisapify.app.storage.store.StoredFileDetails;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreException;
+import com.madadipouya.cisapify.user.model.User;
 import com.madadipouya.cisapify.user.service.UserService;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +19,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 @Service
+@CacheConfig(cacheNames = {"songsCount"})
 public class SongServiceImpl implements SongService {
 
     private final SongRepository songRepository;
@@ -60,11 +65,13 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
+    @CacheEvict(key = "{ #songs.size() > 0 ? #songs[0].user.id : -1 }")
     public void deleteAll(List<Song> songs) {
         songRepository.deleteAll(songs);
     }
 
     @Override
+    @CacheEvict(key = "{ #songs.size() > 0 ? #songs[0].user.id : -1 }")
     public void saveAll(List<Song> songs) {
         songRepository.saveAll(songs);
     }
@@ -75,13 +82,20 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
-    public String save(MultipartFile file) throws StoreException {
+    @CacheEvict(key = "{ #user.id }")
+    public String save(User user, MultipartFile file) throws StoreException {
         StoredFileDetails storedFileDetails = storageService.store(file);
         songRepository.save(Song.Builder().withDisplayName(storedFileDetails.getDisplayName())
                 .withFileName(storedFileDetails.getFileName())
                 .withUri(storedFileDetails.getUri())
-                .withUser(userService.getCurrentUser())
+                .withUser(user)
                 .build());
         return storedFileDetails.getDisplayName();
+    }
+
+    @Override
+    @Cacheable(key = "{ #user.id }")
+    public long getSongsCount(User user) {
+        return songRepository.countByUser(user);
     }
 }

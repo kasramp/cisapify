@@ -5,6 +5,7 @@ import com.madadipouya.cisapify.app.playlist.service.PlaylistService;
 import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.app.song.service.SongService;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreException;
+import com.madadipouya.cisapify.user.service.UserService;
 import com.madadipouya.cisapify.util.ResourceURIBuilder;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -38,9 +39,12 @@ public class PlayerController {
 
     private final SongService songService;
 
-    public PlayerController(PlaylistService playlistService, SongService songService) {
+    private final UserService userService;
+
+    public PlayerController(PlaylistService playlistService, SongService songService, UserService userService) {
         this.playlistService = playlistService;
         this.songService = songService;
+        this.userService = userService;
         this.resourceURIBuilder = new ResourceURIBuilder(PlayerController.class);
     }
 
@@ -84,6 +88,11 @@ public class PlayerController {
         return ResponseEntity.ok(songService.getAllForCurrentUser()
                 .stream().map(this::convertToSongDto)
                 .collect(Collectors.toList()));
+    }
+
+    @GetMapping(value = "/songs/count", produces = "application/json")
+    public ResponseEntity<Map<String, ?>> getUserSongCount() {
+        return ResponseEntity.ok(Map.of("numberOfSongs", songService.getSongsCount(userService.getCurrentUser())));
     }
 
     @GetMapping(value = "/songs/playlist/{playlistId}", produces = "application/json")

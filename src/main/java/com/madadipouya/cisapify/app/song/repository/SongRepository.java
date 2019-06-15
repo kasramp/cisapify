@@ -17,4 +17,6 @@ public interface SongRepository extends JpaRepository<Song, Long> {
     List<Song> findByUser(User user);
 
     Song findByUri(String uri);
+
+    long countByUser(User user);
 }

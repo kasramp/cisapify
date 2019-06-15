@@ -1,29 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'upload')}">
 <body>
-<div th:if="${message}">
-    <h2 th:text="${message}"/>
 
+<div class="row">
+    <div class="col-8">
+        <h2>Song uploader</h2>
+        <hr class="mt-0 mb-4">
+        <div th:if="${message}" class="alert alert-success" th:utext="${message}"></div>
+
+        <form method="POST" enctype="multipart/form-data" action="#"
+              th:action="@{/user/upload} + '?' + ${_csrf.parameterName} + '=' + ${_csrf.token}">
+            <p>Upload song:</p>
+            <div class="custom-file mb-3">
+                <input type="file" class="custom-file-input" id="customFile" name="file" accept="audio/*">
+                <label class="custom-file-label" for="customFile">Choose file</label>
+            </div>
+            <div class="mt-1">
+                <button type="submit" class="btn btn-success">Upload</button>
+            </div>
+        </form>
+    </div>
 </div>
-    <form method="POST" enctype="multipart/form-data" action="#" th:action="@{/user/upload} + '?' + ${_csrf.parameterName} + '=' + ${_csrf.token}">
-        <table>
-            <tr>
-                <td>File to upload:</td>
-                <td><input type="file" name="file" accept="audio/*"/></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input type="submit" value="Upload"/></td>
-            </tr>
-        </table>
-    </form>
-</div>
-<div>
-    <ul>
-        <li th:each="file : ${files}">
-            <a th:href="${file}" th:text="${file}"/>
-        </li>
-    </ul>
-</div>
+
 </body>
 </html>

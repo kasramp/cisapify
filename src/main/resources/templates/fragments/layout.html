@@ -30,10 +30,10 @@
                     <a class="nav-link" th:text="#{upload}" th:href="@{/user/upload}"></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:text="#{player}" th:href="@{/user/player}"></a>
+                    <a class="nav-link player-nav-link" th:text="#{player}" th:href="@{/user/player}"></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:text="#{playerOld}" th:href="@{/user/player_old}"></a>
+                    <a class="nav-link player-nav-link" th:text="#{playerOld}" th:href="@{/user/player_old}"></a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
@@ -73,6 +73,10 @@
         <span class="navbar-text" th:text="#{copyright}"></span>
     </div>
 </div>
+
+<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"

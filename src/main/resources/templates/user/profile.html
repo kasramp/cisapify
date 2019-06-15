@@ -10,9 +10,6 @@
     <div class="col">
         <h2>User profile</h2>
         <hr class="mt-0 mb-4">
-        <div th:if="${message}">
-            <h3 th:text="${message}"/>
-        </div>
 
         <div th:if="${param.error}" class="alert alert-danger" th:text="#{profileUpdatedFailed}"></div>
         <div th:if="${param.success}" class="alert alert-success" th:text="#{profileUpdated}"></div>
@@ -53,21 +50,18 @@
             </div>
             <div class="form-group">
                 <label th:text="#{dropboxConnection}"></label>
-                <button class="fab fa-dropbox btn btn-lg btn-block btn-success" id="dropbox-authentication"
+                <button class="btn btn-lg btn-block btn-success" id="dropbox-authentication"
                         th:utext="${#strings.isEmpty(command.dropboxToken)} ? #{dropboxConnect}: #{dropboxConnected}"
-                        th:disabled="!${#strings.isEmpty(command.dropboxToken)}"></button>
+                        th:disabled="!${#strings.isEmpty(command.dropboxToken)}">
+                </button>
             </div>
             <div class="text-center">
                 <button class="btn btn-success" type="submit" th:text="#{submit}"></button>
             </div>
-
-            <!--"btn btn-lg btn-block btn-success-->
         </form>
     </div>
 </div>
 </div>
 
-<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
-<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
 </body>
 </html>

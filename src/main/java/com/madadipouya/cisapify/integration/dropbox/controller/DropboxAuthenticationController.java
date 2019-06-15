@@ -1,7 +1,5 @@
 package com.madadipouya.cisapify.integration.dropbox.controller;
 
-
-import com.dropbox.core.DbxException;
 import com.madadipouya.cisapify.integration.dropbox.DropboxIntegration;
 import com.madadipouya.cisapify.integration.dropbox.DropboxSongIndexer;
 import com.madadipouya.cisapify.integration.dropbox.exception.DropboxIntegrationException;

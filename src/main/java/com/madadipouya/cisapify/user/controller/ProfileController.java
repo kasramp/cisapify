@@ -1,6 +1,5 @@
 package com.madadipouya.cisapify.user.controller;
 
-import com.madadipouya.cisapify.integration.dropbox.DropboxSongIndexer;
 import com.madadipouya.cisapify.integration.gitlab.GitLabSongIndexer;
 import com.madadipouya.cisapify.user.metadata.ConfirmPassword;
 import com.madadipouya.cisapify.user.model.User;

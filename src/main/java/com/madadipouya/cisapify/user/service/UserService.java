@@ -1,13 +1,10 @@
 package com.madadipouya.cisapify.user.service;
 
-import com.madadipouya.cisapify.app.playlist.exception.AnonymousUserPlaylistCreationException;
 import com.madadipouya.cisapify.user.exception.UserNotFoundException;
 import com.madadipouya.cisapify.user.model.User;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface UserService {
 
@@ -21,14 +18,16 @@ public interface UserService {
 
     /**
      * Retrieves Logged in User
+     *
      * @return {@link Optional<User>} if the user is logged in, {@link Optional#EMPTY} otherwise
      */
     Optional<User> getLoggedInUser();
 
     /**
      * Retrieves the current logged in User
+     *
      * @return {@link User} if the user is logged in, throws exception otherwise
-     * @exception UserNotFoundException if no user is logged in
+     * @throws UserNotFoundException if no user is logged in
      */
     User getCurrentUser() throws UserNotFoundException;
 
@@ -51,9 +50,8 @@ public interface UserService {
     /**
      * Persists a User to the database
      *
-     * @param user to persist
+     * @param user              to persist
      * @param isPasswordUpdated flag to whether encrypt password or not
-     *
      * @return {@link User} with non-null Id if the entity didn't exist, or updated {@link User} otherwise
      */
     User save(User user, boolean isPasswordUpdated);

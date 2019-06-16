@@ -52,6 +52,8 @@ public class PlayerController {
     public String showOldPlayer(Model model) {
         model.addAttribute("songs", songService.getAllForCurrentUser().stream()
                 .collect(Collectors.toMap(song -> createSongsURI(Paths.get(song.getUri())), Song::getDisplayName)));
+        // TODO fix this hack, use the same in `player` to be able to play playlist
+        model.addAttribute("songsUri", "/user/songs");
         return "app/player/player_old.html";
     }
 

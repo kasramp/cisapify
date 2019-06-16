@@ -1,32 +1,82 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org" xmlns:thi="http://www.w3.org/1999/xhtml"
+<html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: layout (~{::body},'upload')}">
 
 <body>
-
+<input type="hidden" id="songsUri" name="songsUri" th:value="${songsUri}">
 <div th:if="${message}">
     <h2 th:text="${message}"/>
 </div>
 
-<div th:if="${file}">
+<!--<div th:if="${file}">
     <audio controls>
         <source th:src="@{${file}}" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
+</div>-->
+
+<div class="row player">
+    <div id="title" class="col-12 mt-2 text-center">
+        <div class="row">
+            <div class="col-2">
+                <div id="timer">0:00</div>
+            </div>
+            <div class="col-8">
+                <span id="track"></span>
+            </div>
+            <div class="col-2">
+                <div id="duration">0:00</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 mt-3">
+        <div id="bar"></div>
+        <input id="progress" class="form-control" type="range" min="0" max="100" step="0.1" value="0">
+    </div>
+    <div class="col-4 my-3"></div>
+    <div class="col-4 text-center my-3 fa-2x">
+        <div id="prevBtn" class="fas fa-backward"></div>
+        <div id="playBtn" class="mr-3 ml-3 fas fa-play"></div>
+        <div id="pauseBtn" class="mr-3 ml-3 fas fa-pause"></div>
+        <i id="loading" class="mr-3 ml-3 fa fa-spinner fa-pulse fa-fw"></i>
+        <div id="nextBtn" class="fas fa-forward"></div>
+    </div>
+    <div id="volume" class="col-4 my-3">
+        <div class="mt-1 text-right">
+            <div class="fas fa-volume-down fa-2x"></div>
+            <input id="barEmpty" class="volume-bar mx-2" type="range" min="0" max="1" step="0.1" value="1">
+            <div id="volumeBtn" class="fas fa-volume-up fa-2x"></div>
+        </div>
+    </div>
 </div>
 
-<div>
+<div class="row my-3">
+    <div id="playlist">
+        <div id="list"></div>
+    </div>
+</div>
+
+<!--<div id="title">-->
+<!--<span id="track"></span>
+<div id="timer">0:00</div>
+<div id="duration">0:00</div>
+</div>-->
+
+<!--<div>
     <ul>
 
         <li th:each="song : ${songs}">
-        <!--<td th:text="${song.key}">keyvalue</td>
-        <td th:text="${song.value}">num</td>-->
-        <!--<li th:each="song : ${songs}">-->
+        &lt;!&ndash;<td th:text="${song.key}">keyvalue</td>
+        <td th:text="${song.value}">num</td>&ndash;&gt;
+        &lt;!&ndash;<li th:each="song : ${songs}">&ndash;&gt;
             <a th:href="${song.key}" th:text="${song.value}" />
         </li>
     </ul>
-</div>
+</div>-->
 
+<script th:src="@{/resources/js/player_2.js}"></script>
+<script th:src="@{/resources/js/howler.core.js}"></script>
+<script th:src="@{/resources/js/siriwave.js}"></script>
 </body>
 </html>

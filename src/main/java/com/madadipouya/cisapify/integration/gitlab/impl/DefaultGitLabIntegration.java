@@ -39,6 +39,8 @@ public class DefaultGitLabIntegration implements GitLabIntegration {
 
     private static final String BLOB_URL = String.format(BASE_URL, "projects/%s%%2F%s/repository/blobs/%s/raw");
 
+    private static final String TEMP_FULL_PATH = "/tmp/%s.mp3";
+
     private final RestTemplate restTemplate;
 
     private DefaultGitLabIntegration(RestTemplate restTemplate) {
@@ -82,10 +84,10 @@ public class DefaultGitLabIntegration implements GitLabIntegration {
                 GET, createHeader(token), byte[].class);
 
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            if (Files.exists(Path.of(String.format("/tmp/%s.mp3", song.getFileName())))) {
-                return Path.of(String.format("/tmp/%s.mp3", song.getFileName()));
+            if (Files.exists(Path.of(String.format(TEMP_FULL_PATH, song.getFileName())))) {
+                return Path.of(String.format(TEMP_FULL_PATH, song.getFileName()));
             }
-            return Files.write(Paths.get(String.format("/tmp/%s.mp3", song.getFileName())), responseEntity.getBody());
+            return Files.write(Paths.get(String.format(TEMP_FULL_PATH, song.getFileName())), responseEntity.getBody());
         }
         throw new FailRetrievingRemoteObjectException(String.format("Unable to retrieve song blob for song id: %s. Got response: %s",
                 song.getId(), responseEntity.getStatusCode()));

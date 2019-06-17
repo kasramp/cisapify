@@ -43,6 +43,8 @@ public class DefaultDropboxIntegration implements DropboxIntegration {
 
     private static final String ROOT_PATH = StringUtils.EMPTY;
 
+    private static final String TEMP_FULL_PATH = "/tmp/%s.mp3";
+
     // TODO cache reading the file content
     @Value("classpath:dropboxAppInfo.json")
     private Resource dropboxAppInfo;
@@ -107,7 +109,7 @@ public class DefaultDropboxIntegration implements DropboxIntegration {
     public Path loadRemoteSong(String token, Song song) throws FailRetrievingRemoteObjectException, IOException {
         try {
             DbxClientV2 client = new DbxClientV2(getRequestConfig(), token);
-            Path storedPath = Path.of(String.format("/tmp/%s.mp3", song.getFileName()));
+            Path storedPath = Path.of(String.format(TEMP_FULL_PATH, song.getFileName()));
             if (!Files.exists(storedPath)) {
                 Files.copy(client.files().download(song.getUri()).getInputStream(), storedPath);
             }

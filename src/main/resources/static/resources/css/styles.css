@@ -18,12 +18,20 @@
     display: none;
 }
 
-.player {
-    border-style: solid;
-    /* TODO replace below */
-    -moz-box-shadow: inset 0 0 10px #000000;
-    -webkit-box-shadow: inset 0 0 10px #000000;
-    box-shadow: inset 0 0 10px #000000;
+.playlist-container {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+#playlist {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+/* TODO find a better way (using bootstrap), this is a hack/workaround */
+
+#prevBtn, #playBtn, #pauseBtn, #nextBtn, #progress, #barEmpty {
+    cursor: pointer;
 }
 
 body {

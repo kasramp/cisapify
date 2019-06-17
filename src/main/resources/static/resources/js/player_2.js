@@ -35,13 +35,23 @@ fetch(songsUri)
 
       // Setup the playlist display.
       playlist.forEach(function (song) {
-        var div = document.createElement('div');
-        div.className = 'list-song py-2';
-        div.innerHTML = song.title;
-        div.onclick = function () {
+        var ahref = document.createElement('a');
+        ahref.className = 'border-left-0 border-right-0 list-song py-2 list-group-item list-group-item-action';
+        ahref.innerHTML = song.title;
+        ahref.href = '#';
+        ahref.onclick = function () {
           player.skipTo(playlist.indexOf(song));
         };
-        list.appendChild(div);
+        list.appendChild(ahref);
+        // <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
+
+        // var div = document.createElement('div');
+        // div.className = 'list-song py-2 border border-success border-right-0 border-left-0';
+        // div.innerHTML = song.title;
+        // div.onclick = function () {
+        //   player.skipTo(playlist.indexOf(song));
+        // };
+        // list.appendChild(div);
       });
     };
     Player.prototype = {
@@ -70,6 +80,12 @@ fetch(songsUri)
               // Display the duration.
               duration.innerHTML = self.formatTime(Math.round(sound.duration()));
 
+
+              // Highlight the song text that's playing
+              let songRow = list.children[index];
+              songRow.classList.add('text-success');
+              console.log(list.children[index]);
+
               // Start upating the progress of the track.
               requestAnimationFrame(self.step.bind(self));
 
@@ -87,6 +103,12 @@ fetch(songsUri)
             onend: function () {
               // Stop the wave animation.
               //wave.container.style.display = 'none';
+
+              // Remove the song highlight
+              let songRow = list.children[index];
+              songRow.classList.remove('text-success');
+
+
               bar.style.display = 'block';
               self.skip('next');
             },
@@ -99,6 +121,8 @@ fetch(songsUri)
               // Stop the wave animation.
               //wave.container.style.display = 'none';
               bar.style.display = 'block';
+              let songRow = list.children[index];
+              songRow.classList.remove('text-success');
             },
             onseek: function () {
               // Start upating the progress of the track.
@@ -242,15 +266,15 @@ fetch(songsUri)
       /**
        * Toggle the playlist display on/off.
        */
-      togglePlaylist: function () {
-        var self = this;
-        var display = (playlist.style.display === 'block') ? 'none' : 'block';
+      // togglePlaylist: function () {
+      //   var self = this;
+      //   var display = (playlist.style.display === 'block') ? 'none' : 'block';
 
-        setTimeout(function () {
-          playlist.style.display = display;
-        }, (display === 'block') ? 0 : 500);
-        playlist.className = (display === 'block') ? 'fadein' : 'fadeout';
-      },
+      //   setTimeout(function () {
+      //     playlist.style.display = display;
+      //   }, (display === 'block') ? 0 : 500);
+      //   playlist.className = (display === 'block') ? 'fadein' : 'fadeout';
+      // },
 
       /**
        * Toggle the volume display on/off.

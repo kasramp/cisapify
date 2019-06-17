@@ -8,11 +8,9 @@ import com.madadipouya.cisapify.app.storage.store.StoredFileDetails;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreException;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreFileNotFoundException;
 import com.madadipouya.cisapify.i18n.service.I18nService;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.RegExUtils;
+import com.madadipouya.cisapify.util.SongUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -20,7 +18,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.UUID;
 
 @Component
 public class LocalFilesystemSongStore extends AbstractSongStore implements SongStore {
@@ -47,8 +44,8 @@ public class LocalFilesystemSongStore extends AbstractSongStore implements SongS
 
     @Override
     public StoredFileDetails store(MultipartFile file) throws StoreException {
-        String displayName = sanitize(file.getOriginalFilename());
-        String storedFileName = generateRandomFileName(displayName);
+        String displayName = SongUtil.sanitize(file.getOriginalFilename());
+        String storedFileName = SongUtil.generateRandomSongFilename(displayName);
         if (file.isEmpty()) {
             throw new StoreException(i18nService.getMessage("upload.service.failStoreEmptyFile", displayName));
         }
@@ -73,13 +70,5 @@ public class LocalFilesystemSongStore extends AbstractSongStore implements SongS
     @Override
     public StorageType getSupportedType() {
         return StorageType.LOCAL_SIMPLE_FILESYSTEM;
-    }
-
-    private String sanitize(String fileName) {
-        return RegExUtils.replaceAll(StringUtils.cleanPath(fileName), "#", "");
-    }
-
-    private String generateRandomFileName(String displayFileName) {
-        return String.format("%s.%s", UUID.randomUUID().toString(), FilenameUtils.getExtension(displayFileName));
     }
 }

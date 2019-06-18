@@ -56,7 +56,7 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public List<Song> getAllForCurrentUser() {
-        return songRepository.findByUser(userService.getCurrentUser());
+        return songRepository.findByUserOrderByDisplayName(userService.getCurrentUser());
     }
 
     @Override

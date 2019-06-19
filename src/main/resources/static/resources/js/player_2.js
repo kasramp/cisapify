@@ -99,6 +99,8 @@ fetch(songsUri)
               //wave.container.style.display = 'block';
               bar.style.display = 'none';
               loading.style.display = 'none';
+              prevBtn.style.pointerEvents = 'auto';
+              nextBtn.style.pointerEvents = 'auto';
             },
             onend: function () {
               // Stop the wave animation.
@@ -143,6 +145,8 @@ fetch(songsUri)
           pauseBtn.style.display = 'inline-block';
         } else {
           loading.style.display = 'inline-block';
+          nextBtn.style.pointerEvents = 'none';
+          prevBtn.style.pointerEvents = 'none';
           playBtn.style.display = 'none';
           pauseBtn.style.display = 'none';
         }

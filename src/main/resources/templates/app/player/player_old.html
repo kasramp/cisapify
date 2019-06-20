@@ -9,13 +9,6 @@
     <h2 th:text="${message}"/>
 </div>
 
-<!--<div th:if="${file}">
-    <audio controls>
-        <source th:src="@{${file}}" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-</div>-->
-
 <div class="row player shadow-lg p-3 mb-5 bg-white rounded">
     <div id="title" class="col-12 mt-2 text-center">
         <div class="row">
@@ -53,27 +46,10 @@
 
 <div class="row my-3 playlist-container">
     <div class="col-12" id="playlist">
-        <div id="list" class="list-group"></div>
+        <ul id="list" class="list-group">
+        </ul>
     </div>
 </div>
-
-<!--<div id="title">-->
-<!--<span id="track"></span>
-<div id="timer">0:00</div>
-<div id="duration">0:00</div>
-</div>-->
-
-<!--<div>
-    <ul>
-
-        <li th:each="song : ${songs}">
-        &lt;!&ndash;<td th:text="${song.key}">keyvalue</td>
-        <td th:text="${song.value}">num</td>&ndash;&gt;
-        &lt;!&ndash;<li th:each="song : ${songs}">&ndash;&gt;
-            <a th:href="${song.key}" th:text="${song.value}" />
-        </li>
-    </ul>
-</div>-->
 
 <script th:src="@{/resources/js/player_2.js}"></script>
 <script th:src="@{/resources/js/howler.core.js}"></script>

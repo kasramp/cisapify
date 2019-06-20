@@ -2,9 +2,12 @@
     width: 100%;
 }
 
+/* TODO Disabled to replace with SSE */
+/*
 .player-nav-link {
     display: none;
 }
+*/
 
 .volume-bar {
     max-width: 100px;
@@ -36,6 +39,16 @@
 
 .custom-file {
     overflow: hidden;
+}
+
+.d-flex {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+a.list-song {
+    color: #495057;
+    text-decoration: none;
 }
 
 body {

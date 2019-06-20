@@ -2,7 +2,8 @@ $(document).ready(function () {
     let token = $('#_csrf').attr('content');
     let header = $('#_csrf_header').attr('content');
 
-    $.ajax({
+    // TODO Disabled to replace with SSE
+    /*$.ajax({
         type: 'GET',
         beforeSend: function (xhr) {
             xhr.setRequestHeader(header, token);
@@ -18,7 +19,7 @@ $(document).ready(function () {
         }
     }).fail(function (response, status, error) {
         console.log(error);
-    });
+    });*/
 
     $('#dropbox-authentication').click(function (event) {
         event.preventDefault();

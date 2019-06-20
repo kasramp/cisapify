@@ -35,23 +35,25 @@ fetch(songsUri)
 
       // Setup the playlist display.
       playlist.forEach(function (song) {
+        var li = document.createElement('li');
+        li.className = 'list-group-item list-group-item-action rounded-0 d-flex border-left-0 border-right-0';
+        
         var ahref = document.createElement('a');
-        ahref.className = 'border-left-0 border-right-0 list-song py-2 list-group-item list-group-item-action';
+        ahref.className = 'col-10 list-song py-2';
         ahref.innerHTML = song.title;
         ahref.href = '#';
         ahref.onclick = function () {
           player.skipTo(playlist.indexOf(song));
         };
-        list.appendChild(ahref);
-        // <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
+        li.appendChild(ahref);
 
-        // var div = document.createElement('div');
-        // div.className = 'list-song py-2 border border-success border-right-0 border-left-0';
-        // div.innerHTML = song.title;
-        // div.onclick = function () {
-        //   player.skipTo(playlist.indexOf(song));
-        // };
-        // list.appendChild(div);
+        var div = document.createElement('div');
+        div.className = 'col-2 list-song py-2 text-right';
+        // TODO Ideally should be filled with something else
+        div.innerHTML = "";
+        li.appendChild(div);
+        
+        list.appendChild(li);
       });
     };
     Player.prototype = {
@@ -82,9 +84,8 @@ fetch(songsUri)
 
 
               // Highlight the song text that's playing
-              let songRow = list.children[index];
-              songRow.classList.add('text-success');
-              console.log(list.children[index]);
+              let songRow = list.children[index].children[0];
+              songRow.classList.add("text-success");
 
               // Start upating the progress of the track.
               requestAnimationFrame(self.step.bind(self));
@@ -107,7 +108,7 @@ fetch(songsUri)
               //wave.container.style.display = 'none';
 
               // Remove the song highlight
-              let songRow = list.children[index];
+              let songRow = llist.children[index].children[0];
               songRow.classList.remove('text-success');
 
 
@@ -123,7 +124,7 @@ fetch(songsUri)
               // Stop the wave animation.
               //wave.container.style.display = 'none';
               bar.style.display = 'block';
-              let songRow = list.children[index];
+              let songRow = list.children[index].children[0];
               songRow.classList.remove('text-success');
             },
             onseek: function () {

@@ -5,21 +5,44 @@
 
 <body>
 
-<div th:if="${message}">
-    <h2 th:text="${message}"/>
+<!--<div th:if="${message}">-->
+<!--    <h2 th:text="${message}"/>-->
+<!--</div>-->
+
+<div class="row">
+    <div class="col">
+        <h2>Create playlist</h2>
+        <hr class="mt-0 mb-4">
+    </div>
 </div>
 
 <form action="#" th:action="@{/user/playlists/create}" th:object="${command}" method="post">
-    <div class="container">
-        <div class="form-group">
-            <label for="playlistName" th:text="#{playlistName}"></label>
-            <input type="text" class="form-control" id="playlistName" th:field="*{playlistName}">
+    <div class="form-group row">
+        <div class="col-11">
+            <input type="text" class="form-control" id="playlistName" th:field="*{playlistName}"
+                   placeholder="Playlist name">
         </div>
-        <div class="checkbox" th:each="checkboxValue: ${allUserSongs}">
-            <input type="checkbox" th:field="*{playlistSongs}" th:value="${checkboxValue.id}">
-            <label th:for="${#ids.prev('playlistSongs')}" th:text="${checkboxValue.displayName}"></label>
-        </div>
+        <button type="submit" class="btn btn-success">Create</button>
+    </div>
+
+    <div class="form-check" th:each="checkboxValue: ${allUserSongs}">
+        <input class="form-check-input" type="checkbox" th:field="*{playlistSongs}" th:value="${checkboxValue.id}">
+        <label class="form-check-label" th:for="${#ids.prev('playlistSongs')}" th:text="${checkboxValue.displayName}"></label>
     </div>
 </form>
+
+
+<!--<form action="#" th:action="@{/user/playlists/create}" th:object="${command}" method="post">-->
+<!--    <div class="container">-->
+<!--        <div class="form-group">-->
+<!--            <label for="playlistName" th:text="#{playlistName}"></label>-->
+<!--            <input type="text" class="form-control" id="playlistName" th:field="*{playlistName}">-->
+<!--        </div>-->
+<!--        <div class="checkbox" th:each="checkboxValue: ${allUserSongs}">-->
+<!--            <input type="checkbox" th:field="*{playlistSongs}" th:value="${checkboxValue.id}">-->
+<!--            <label th:for="${#ids.prev('playlistSongs')}" th:text="${checkboxValue.displayName}"></label>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</form>-->
 </body>
 </html>

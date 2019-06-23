@@ -1,13 +1,8 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{fragments/layout :: layout (~{::body},'upload')}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'upload')}">
 
 <body>
-
-<!--<div th:if="${message}">-->
-<!--    <h2 th:text="${message}"/>-->
-<!--</div>-->
 
 <div class="row">
     <div class="col">
@@ -25,24 +20,15 @@
         <button type="submit" class="btn btn-success">Create</button>
     </div>
 
-    <div class="form-check" th:each="checkboxValue: ${allUserSongs}">
-        <input class="form-check-input" type="checkbox" th:field="*{playlistSongs}" th:value="${checkboxValue.id}">
-        <label class="form-check-label" th:for="${#ids.prev('playlistSongs')}" th:text="${checkboxValue.displayName}"></label>
-    </div>
+    <ul class="mt-5 list-group songs-container">
+        <li class="song px-3 py-2 rounded-0 list-group-item list-group-item-action border-left-0 border-right-0"
+            th:each="checkboxValue: ${allUserSongs}">
+            <input type="checkbox" th:field="*{playlistSongs}" th:value="${checkboxValue.id}">
+            <label class="mb-0" th:for="${#ids.prev('playlistSongs')}"
+                   th:text="${checkboxValue.displayName}"></label>
+        </li>
+    </ul>
 </form>
 
-
-<!--<form action="#" th:action="@{/user/playlists/create}" th:object="${command}" method="post">-->
-<!--    <div class="container">-->
-<!--        <div class="form-group">-->
-<!--            <label for="playlistName" th:text="#{playlistName}"></label>-->
-<!--            <input type="text" class="form-control" id="playlistName" th:field="*{playlistName}">-->
-<!--        </div>-->
-<!--        <div class="checkbox" th:each="checkboxValue: ${allUserSongs}">-->
-<!--            <input type="checkbox" th:field="*{playlistSongs}" th:value="${checkboxValue.id}">-->
-<!--            <label th:for="${#ids.prev('playlistSongs')}" th:text="${checkboxValue.displayName}"></label>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</form>-->
 </body>
 </html>

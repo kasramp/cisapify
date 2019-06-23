@@ -26,6 +26,11 @@
     overflow-y: auto;
 }
 
+.songs-container {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
 #playlist {
     padding-right: 0;
     padding-left: 0;

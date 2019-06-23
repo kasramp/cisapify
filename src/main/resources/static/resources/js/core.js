@@ -43,4 +43,11 @@ $(document).ready(function () {
         let fileName = $(this).val().split('\\').pop();
         $(this).siblings('.custom-file-label').addClass('selected').html(fileName);
     });
+
+    $('.song').on('click', function(event) {
+        event.preventDefault();
+        $(this).toggleClass('list-group-item-success');
+        let checkbox = $(this).find('input[type=checkbox]');
+        checkbox.prop('checked', !checkbox.prop('checked'));
+    })
 });

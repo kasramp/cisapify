@@ -108,7 +108,7 @@ fetch(songsUri)
               //wave.container.style.display = 'none';
 
               // Remove the song highlight
-              let songRow = llist.children[index].children[0];
+              let songRow = list.children[index].children[0];
               songRow.classList.remove('text-success');
 
 

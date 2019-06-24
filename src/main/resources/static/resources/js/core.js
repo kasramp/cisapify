@@ -45,9 +45,11 @@ $(document).ready(function () {
     });
 
     $('.song').on('click', function(event) {
-        event.preventDefault();
+        if(event.target.type !== "checkbox") {
+            event.preventDefault();
+            let checkbox = $(this).find('input[type=checkbox]');
+            checkbox.prop('checked', !checkbox.prop('checked'));
+        }
         $(this).toggleClass('list-group-item-success');
-        let checkbox = $(this).find('input[type=checkbox]');
-        checkbox.prop('checked', !checkbox.prop('checked'));
-    })
+    });
 });

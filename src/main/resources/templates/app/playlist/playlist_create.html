@@ -12,14 +12,10 @@
 </div>
 
 <form action="#" th:action="@{/user/playlists/create}" th:object="${command}" method="post">
-    <div class="row">
-        <div class="col-10">
-            <input type="text" class="form-control" id="playlistName" th:field="*{playlistName}"
-                   placeholder="Playlist name">
-        </div>
-        <div class="float-right col-1">
+    <div class="d-flex">
+        <input type="text" class="form-control mr-2" id="playlistName" th:field="*{playlistName}"
+               placeholder="Playlist name">
         <button type="submit" class="btn btn-success">Create</button>
-        </div>
     </div>
 
     <ul class="mt-5 list-group songs-container">

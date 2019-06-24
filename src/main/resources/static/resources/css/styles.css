@@ -31,6 +31,10 @@
     overflow-y: auto;
 }
 
+.songs-container * {
+    cursor: pointer;
+}
+
 #playlist {
     padding-right: 0;
     padding-left: 0;

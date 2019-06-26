@@ -16,7 +16,7 @@
 
     <properties>
         <!-- Generic properties -->
-        <java.version>11</java.version>
+        <java.version>12</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -258,11 +258,11 @@
         </plugins>
     </build>
 
-    <!-- Apache 2 license -->
+    <!-- MIT license -->
     <licenses>
         <license>
-            <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <name>The MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
         </license>
     </licenses>
 

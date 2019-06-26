@@ -13,3 +13,9 @@ Run with `developer` profile
 ```bash
 $ mvn clean compile -Pdeveloper
 ```
+
+Set `mysql` profile:
+
+```bash
+$ export SPRING_PROFILES_ACTIVE=mysql
+```

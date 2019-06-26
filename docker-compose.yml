@@ -5,5 +5,5 @@ mysql:
   environment:
     - MYSQL_ROOT_PASSWORD=secret
     - MYSQL_DATABASE=cisapify
-  #volumes:
-  #  - "./conf.d:/etc/mysql/conf.d:ro"
+  volumes:
+    - /tmp/opt/cisapify/mysql_data:/var/lib/mysql # once system restarts the data will be removed

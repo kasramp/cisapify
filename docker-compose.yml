@@ -6,4 +6,4 @@ mysql:
     - MYSQL_ROOT_PASSWORD=secret
     - MYSQL_DATABASE=cisapify
   volumes:
-    - /tmp/opt/cisapify/mysql_data:/var/lib/mysql # once system restarts the data will be removed
+    - /tmp/opt/cisapify/mysql_data:/var/lib/mysql # once system restarts the data will be wiped out

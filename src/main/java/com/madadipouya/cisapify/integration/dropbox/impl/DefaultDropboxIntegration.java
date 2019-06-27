@@ -7,7 +7,7 @@ import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.DbxSessionStore;
 import com.dropbox.core.DbxStandardSessionStore;
 import com.dropbox.core.DbxWebAuth;
-import com.dropbox.core.json.JsonReader;
+import com.dropbox.core.json.JsonReadException;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.Metadata;
@@ -15,6 +15,7 @@ import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.integration.base.exception.FailRetrievingRemoteObjectException;
 import com.madadipouya.cisapify.integration.base.exception.SongsListRetrievalException;
 import com.madadipouya.cisapify.integration.dropbox.DropboxIntegration;
+import com.madadipouya.cisapify.integration.dropbox.DropboxProperties;
 import com.madadipouya.cisapify.integration.dropbox.exception.DropboxIntegrationException;
 import com.madadipouya.cisapify.user.model.User;
 import com.madadipouya.cisapify.user.service.UserService;
@@ -23,8 +24,6 @@ import com.madadipouya.cisapify.util.SongUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,15 +44,14 @@ public class DefaultDropboxIntegration implements DropboxIntegration {
 
     private static final String TEMP_FULL_PATH = "/tmp/%s.mp3";
 
-    // TODO cache reading the file content
-    @Value("classpath:dropboxAppInfo.json")
-    private Resource dropboxAppInfo;
+    private final DropboxProperties dropboxProperties;
 
     private final ApplicationContextUtil applicationContextUtil;
 
     private final UserService userService;
 
-    public DefaultDropboxIntegration(ApplicationContextUtil applicationContextUtil, UserService userService) {
+    public DefaultDropboxIntegration(DropboxProperties dropboxProperties, ApplicationContextUtil applicationContextUtil, UserService userService) {
+        this.dropboxProperties = dropboxProperties;
         this.applicationContextUtil = applicationContextUtil;
         this.userService = userService;
     }
@@ -65,7 +63,7 @@ public class DefaultDropboxIntegration implements DropboxIntegration {
             DbxWebAuth.Request authRequest = DbxWebAuth.newRequestBuilder()
                     .withRedirectUri(String.format(REDIRECT_URL, applicationContextUtil.getBaseUrl()), getSessionStore(request)).build();
             return getWebAuth().authorize(authRequest);
-        } catch (IOException | JsonReader.FileLoadException configLoadException) {
+        } catch (JsonReadException configLoadException) {
             throw new DropboxIntegrationException("Failed to load Dropbox configuration file", configLoadException);
         }
     }
@@ -79,7 +77,7 @@ public class DefaultDropboxIntegration implements DropboxIntegration {
             logger.info("The token is {}", authFinish.getAccessToken());
             return updateUserProfile(authFinish.getAccessToken());
 
-        } catch (IOException | JsonReader.FileLoadException configLoadException) {
+        } catch (JsonReadException configLoadException) {
             throw new DropboxIntegrationException("Failed to load Dropbox configuration file", configLoadException);
         } catch (DbxWebAuth.BadRequestException | DbxWebAuth.BadStateException | DbxWebAuth.CsrfException
                 | DbxWebAuth.NotApprovedException | DbxWebAuth.ProviderException | DbxException dropboxAuthorizationException) {
@@ -120,11 +118,11 @@ public class DefaultDropboxIntegration implements DropboxIntegration {
         }
     }
 
-    private DbxAppInfo getAppInfo() throws IOException, JsonReader.FileLoadException {
-        return DbxAppInfo.Reader.readFromFile(dropboxAppInfo.getURI().getPath());
+    private DbxAppInfo getAppInfo() throws JsonReadException {
+        return DbxAppInfo.Reader.readFully(dropboxProperties.getAppInfoAsJson());
     }
 
-    private DbxWebAuth getWebAuth() throws IOException, JsonReader.FileLoadException {
+    private DbxWebAuth getWebAuth() throws JsonReadException {
         return new DbxWebAuth(getRequestConfig(), getAppInfo());
     }
 

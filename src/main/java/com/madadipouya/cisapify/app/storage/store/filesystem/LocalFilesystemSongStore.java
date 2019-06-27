@@ -8,6 +8,7 @@ import com.madadipouya.cisapify.app.storage.store.StoredFileDetails;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreException;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreFileNotFoundException;
 import com.madadipouya.cisapify.i18n.service.I18nService;
+import com.madadipouya.cisapify.util.ApplicationContextUtil;
 import com.madadipouya.cisapify.util.SongUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -22,15 +23,13 @@ import java.nio.file.StandardCopyOption;
 @Component
 public class LocalFilesystemSongStore extends AbstractSongStore implements SongStore {
 
-    private static final String TEMP_PATH = "/tmp/";
-
     private final Path rootLocation;
 
     private final I18nService i18nService;
 
     public LocalFilesystemSongStore(I18nService i18nService) {
         this.i18nService = i18nService;
-        rootLocation = Path.of(TEMP_PATH);
+        rootLocation = ApplicationContextUtil.getStaticSongResourcePath();
     }
 
     @Override

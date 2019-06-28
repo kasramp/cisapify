@@ -16,7 +16,7 @@ mkdir -p static/songs
 
 docker pull kasramp/cisapify
 
-docker run --mount src=$(pwd)/static/songs,target=/user/share/cisapify/static/songs,type=bind -d -p8080:8080 -e SPRING_DATASOURCE_URL=$1 -e SPRING_DATASOURCE_USERNAME=$2 -e SPRING_DATASOURCE_PASSWORD=$3 -e APP_INFO_KEY=$4 -e APP_INFO_SECRET=$5 registry.hub.docker.com/kasramp/cisapify:latest
+docker run --mount src=$(pwd)/static/songs,target=/user/share/cisapify/static/songs,type=bind -d -p80:8080 -e SPRING_DATASOURCE_URL=$1 -e SPRING_DATASOURCE_USERNAME=$2 -e SPRING_DATASOURCE_PASSWORD=$3 -e APP_INFO_KEY=$4 -e APP_INFO_SECRET=$5 registry.hub.docker.com/kasramp/cisapify:latest
 
 
 echo -e "Successfully ran the container"

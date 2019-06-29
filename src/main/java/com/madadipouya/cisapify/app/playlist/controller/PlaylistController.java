@@ -36,15 +36,21 @@ public class PlaylistController {
 
     @GetMapping("/playlists")
     public String showPlaylists(Model model) {
-        User user = userService.getLoggedInUser().orElse(new User());
-        model.addAttribute("playlists", playlistService.getPlaylist(user).stream().collect(
-                Collectors.toMap(this::constructPlaylistUri, Playlist::getName)));
+        Set<Playlist> playLists = playlistService.getPlaylist(userService.getLoggedInUser().orElse(new User()));
+        if (playLists.size() > 0) {
+            model.addAttribute("playlists", playLists.stream().map(playlist ->
+                    new PlaylistShowCommand(playlist.getName(), playlist.getId(), playlist.getSongs().size()))
+                    .collect(Collectors.toList()));
+        } else {
+            model.addAttribute("message", "You do not have any playlist. " +
+                    "To create click <a href='/user/playlists/create'>here</a>");
+        }
         return "app/playlist/playlist.html";
     }
 
     @GetMapping("/playlists/{playlistId}")
     public ModelAndView getPlaylistSongs(@PathVariable long playlistId) {
-        return new ModelAndView(String.format("redirect:/user/player?playlist=%s", playlistId));
+        return new ModelAndView(String.format("redirect:/user/player_old?playlist=%s", playlistId));
     }
 
     @GetMapping("/playlists/create")
@@ -58,10 +64,6 @@ public class PlaylistController {
     public ModelAndView createPlaylist(@ModelAttribute("command") PlayListCommand command) {
         playlistService.create(command.playlistSongs, command.getPlaylistName());
         return new ModelAndView("redirect:/user/playlists");
-    }
-
-    private String constructPlaylistUri(Playlist playlist) {
-        return String.format("/user/playlists/%s", playlist.getId());
     }
 
     public static class PlayListCommand {
@@ -83,6 +85,35 @@ public class PlaylistController {
 
         public void setPlaylistSongs(Set<Long> playlistSongs) {
             this.playlistSongs = playlistSongs;
+        }
+    }
+
+    public static class PlaylistShowCommand {
+
+        private static final String URI_PATH = "/user/playlists/%s";
+
+        private final String name;
+
+        private final String uri;
+
+        private final long count;
+
+        PlaylistShowCommand(String name, long id, long count) {
+            this.name = name;
+            this.uri = String.format(URI_PATH, id);
+            this.count = count;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getUri() {
+            return uri;
+        }
+
+        public long getCount() {
+            return count;
         }
     }
 }

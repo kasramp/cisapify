@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -49,11 +48,13 @@ public class PlayerController {
     }
 
     @GetMapping("/player_old")
-    public String showOldPlayer(Model model) {
-        model.addAttribute("songs", songService.getAllForCurrentUser().stream()
-                .collect(Collectors.toMap(song -> createSongsURI(Paths.get(song.getUri())), Song::getDisplayName)));
-        // TODO fix this hack, use the same in `player` to be able to play playlist
-        model.addAttribute("songsUri", "/user/songs");
+    public String showOldPlayer(@RequestParam(value = "playlist", required = false, defaultValue = "-1") long playlist,
+                                Model model) {
+        if (playlist >= 0) {
+            model.addAttribute("songsUri", String.format("/user/songs/playlist/%s", playlist));
+        } else {
+            model.addAttribute("songsUri", "/user/songs");
+        }
         return "app/player/player_old.html";
     }
 

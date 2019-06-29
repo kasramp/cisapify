@@ -1,6 +1,7 @@
 package com.madadipouya.cisapify.integration.gitlab.impl;
 
 import com.madadipouya.cisapify.app.song.model.Song;
+import com.madadipouya.cisapify.i18n.service.I18nService;
 import com.madadipouya.cisapify.integration.base.exception.SongsListRetrievalException;
 import com.madadipouya.cisapify.integration.gitlab.GitLabIntegration;
 import com.madadipouya.cisapify.integration.base.exception.FailRetrievingRemoteObjectException;
@@ -43,8 +44,11 @@ public class DefaultGitLabIntegration implements GitLabIntegration {
 
     private final RestTemplate restTemplate;
 
-    private DefaultGitLabIntegration(RestTemplate restTemplate) {
+    private final I18nService i18nService;
+
+    private DefaultGitLabIntegration(RestTemplate restTemplate, I18nService i18nService) {
         this.restTemplate = restTemplate;
+        this.i18nService = i18nService;
     }
 
     // TODO proper exception handling
@@ -67,7 +71,7 @@ public class DefaultGitLabIntegration implements GitLabIntegration {
                         });
 
         if(!responseEntity.getStatusCode().is2xxSuccessful()) {
-            throw new SongsListRetrievalException("Fail to retrieve songs list");
+            throw new SongsListRetrievalException(i18nService.getMessage("gitlab.integration.failedToLoadSongsList"));
         }
 
         return Optional.ofNullable(responseEntity.getBody())
@@ -89,7 +93,7 @@ public class DefaultGitLabIntegration implements GitLabIntegration {
             }
             return Files.write(Paths.get(String.format(TEMP_FULL_PATH, song.getFileName())), responseEntity.getBody());
         }
-        throw new FailRetrievingRemoteObjectException(String.format("Unable to retrieve song blob for song id: %s. Got response: %s",
+        throw new FailRetrievingRemoteObjectException(i18nService.getMessage("gitlab.integration.failedToLoadSongBlog",
                 song.getId(), responseEntity.getStatusCode()));
     }
 

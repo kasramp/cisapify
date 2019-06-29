@@ -12,6 +12,7 @@ import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.Metadata;
 import com.madadipouya.cisapify.app.song.model.Song;
+import com.madadipouya.cisapify.i18n.service.I18nService;
 import com.madadipouya.cisapify.integration.base.exception.FailRetrievingRemoteObjectException;
 import com.madadipouya.cisapify.integration.base.exception.SongsListRetrievalException;
 import com.madadipouya.cisapify.integration.dropbox.DropboxIntegration;
@@ -50,10 +51,14 @@ public class DefaultDropboxIntegration implements DropboxIntegration {
 
     private final UserService userService;
 
-    public DefaultDropboxIntegration(DropboxProperties dropboxProperties, ApplicationContextUtil applicationContextUtil, UserService userService) {
+    private final I18nService i18nService;
+
+    public DefaultDropboxIntegration(DropboxProperties dropboxProperties, ApplicationContextUtil applicationContextUtil,
+                                     UserService userService, I18nService i18nService) {
         this.dropboxProperties = dropboxProperties;
         this.applicationContextUtil = applicationContextUtil;
         this.userService = userService;
+        this.i18nService = i18nService;
     }
 
     @Override
@@ -64,7 +69,7 @@ public class DefaultDropboxIntegration implements DropboxIntegration {
                     .withRedirectUri(String.format(REDIRECT_URL, applicationContextUtil.getBaseUrl()), getSessionStore(request)).build();
             return getWebAuth().authorize(authRequest);
         } catch (JsonReadException configLoadException) {
-            throw new DropboxIntegrationException("Failed to load Dropbox configuration file", configLoadException);
+            throw new DropboxIntegrationException(i18nService.getMessage("dropbox.integration.failedToLoadConfig"), configLoadException);
         }
     }
 
@@ -73,15 +78,13 @@ public class DefaultDropboxIntegration implements DropboxIntegration {
         try {
             DbxAuthFinish authFinish = getWebAuth().finishFromRedirect(String.format(REDIRECT_URL, applicationContextUtil.getBaseUrl()),
                     getSessionStore(request), request.getParameterMap());
-
-            logger.info("The token is {}", authFinish.getAccessToken());
             return updateUserProfile(authFinish.getAccessToken());
 
         } catch (JsonReadException configLoadException) {
-            throw new DropboxIntegrationException("Failed to load Dropbox configuration file", configLoadException);
+            throw new DropboxIntegrationException(i18nService.getMessage("dropbox.integration.failedToLoadConfig"), configLoadException);
         } catch (DbxWebAuth.BadRequestException | DbxWebAuth.BadStateException | DbxWebAuth.CsrfException
                 | DbxWebAuth.NotApprovedException | DbxWebAuth.ProviderException | DbxException dropboxAuthorizationException) {
-            throw new DropboxIntegrationException("Received none 200 response from Dropbox", dropboxAuthorizationException);
+            throw new DropboxIntegrationException(i18nService.getMessage("dropbox.integration.noneSuccessResponse"), dropboxAuthorizationException);
         }
     }
 
@@ -99,7 +102,7 @@ public class DefaultDropboxIntegration implements DropboxIntegration {
                     .map(file -> transformToSong((FileMetadata) file, user))
                     .collect(Collectors.toList());
         } catch (DbxException dropboxException) {
-            throw new SongsListRetrievalException("Fail to retrieve songs list", dropboxException);
+            throw new SongsListRetrievalException(i18nService.getMessage("dropbox.integration.failedToLoadSongsList"), dropboxException);
         }
     }
 
@@ -114,7 +117,7 @@ public class DefaultDropboxIntegration implements DropboxIntegration {
             return storedPath;
         } catch (DbxException dropboxException) {
             throw new FailRetrievingRemoteObjectException(
-                    String.format("Unable to retrieve song blob for song id: %s", song.getId()), dropboxException);
+                    i18nService.getMessage("dropbox.integration.failedToLoadSongBlog", song.getId()), dropboxException);
         }
     }
 

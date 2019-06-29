@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html xmlns:th="http://www.thymeleaf.org" th:fragment="layout (template, menu)" xml:lang="en">
 <head>
     <!-- Required meta tags -->
@@ -38,10 +39,10 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                        aria-haspopup="true" aria-expanded="false"
-                       th:text="#{playlists}">Playlists</a>
+                       th:text="#{playlists}"></a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" th:text="#{show}" th:href="@{/user/playlists}">Show</a>
-                        <a class="dropdown-item" th:text="#{create}" th:href="@{/user/playlists/create}">Create</a>
+                        <a class="dropdown-item" th:text="#{show}" th:href="@{/user/playlists}"></a>
+                        <a class="dropdown-item" th:text="#{create}" th:href="@{/user/playlists/create}"></a>
                     </div>
                 </li>
                 <li class="nav-item">
@@ -52,7 +53,7 @@
             <ul class="navbar-nav">
                 <li class="nav-item dropdown"
                     th:switch="${#authentication}? ${#authorization.expression('isAuthenticated()')} : ${true}">
-                    <a th:case="${false}" class="nav-link" th:href="@{/login}">Login</a>
+                    <a th:case="${false}" class="nav-link" th:href="@{/login}" th:text="#{login}"></a>
                     <a th:case="${true}" class="nav-link dropdown-toggle" th:text="${#authentication.getName()}"
                        data-toggle="dropdown" href="#"
                        aria-haspopup="true" aria-expanded="false"></a>

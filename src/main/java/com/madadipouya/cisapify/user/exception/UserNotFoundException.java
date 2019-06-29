@@ -3,11 +3,12 @@ package com.madadipouya.cisapify.user.exception;
 import org.springframework.security.core.AuthenticationException;
 
 public class UserNotFoundException extends AuthenticationException {
-    public UserNotFoundException(String msg, Throwable t) {
-        super(msg, t);
+
+    public UserNotFoundException(String message, Throwable throwable) {
+        super(message, throwable);
     }
 
-    public UserNotFoundException(String msg) {
-        super(msg);
+    public UserNotFoundException(String message) {
+        super(message);
     }
 }

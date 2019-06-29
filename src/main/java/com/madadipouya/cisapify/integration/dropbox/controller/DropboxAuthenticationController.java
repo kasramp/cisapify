@@ -1,5 +1,6 @@
 package com.madadipouya.cisapify.integration.dropbox.controller;
 
+import com.madadipouya.cisapify.i18n.service.I18nService;
 import com.madadipouya.cisapify.integration.dropbox.DropboxIntegration;
 import com.madadipouya.cisapify.integration.dropbox.DropboxSongIndexer;
 import com.madadipouya.cisapify.integration.dropbox.exception.DropboxIntegrationException;
@@ -27,9 +28,12 @@ public class DropboxAuthenticationController {
 
     private final DropboxSongIndexer dropboxSongIndexer;
 
-    public DropboxAuthenticationController(DropboxIntegration dropboxIntegration, DropboxSongIndexer dropboxSongIndexer) {
+    private final I18nService i18nService;
+
+    public DropboxAuthenticationController(DropboxIntegration dropboxIntegration, DropboxSongIndexer dropboxSongIndexer, I18nService i18nService) {
         this.dropboxIntegration = dropboxIntegration;
         this.dropboxSongIndexer = dropboxSongIndexer;
+        this.i18nService = i18nService;
     }
 
     @PostMapping
@@ -37,7 +41,7 @@ public class DropboxAuthenticationController {
         try {
             return ResponseEntity.ok().body(Map.of("redirect", dropboxIntegration.getAuthorizationUrl(request)));
         } catch (DropboxIntegrationException dropboxIntegrationException) {
-            logger.warn("Failed to get authorization url for Dropbox", dropboxIntegrationException);
+            logger.warn(i18nService.getMessage("dropbox.controller.authentication.failedToGetAuthUrl"), dropboxIntegrationException);
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
@@ -50,7 +54,7 @@ public class DropboxAuthenticationController {
             response.sendRedirect("/user/profile?success");
             return;
         } catch (DropboxIntegrationException dropboxIntegrationException) {
-            logger.warn("Failed to get finish authorization to Dropbox", dropboxIntegrationException);
+            logger.warn(i18nService.getMessage("dropbox.controller.authentication.failedToCompleteAuth"), dropboxIntegrationException);
         }
         response.sendRedirect("/user/profile?error");
     }

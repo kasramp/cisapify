@@ -2,6 +2,7 @@ package com.madadipouya.cisapify.integration.gitlab;
 
 import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.app.song.service.SongService;
+import com.madadipouya.cisapify.i18n.service.I18nService;
 import com.madadipouya.cisapify.integration.base.exception.SongsListRetrievalException;
 import com.madadipouya.cisapify.user.model.User;
 import com.madadipouya.cisapify.user.service.UserService;
@@ -25,16 +26,20 @@ public class GitLabSongIndexer {
 
     private final SongService songService;
 
-    public GitLabSongIndexer(GitLabIntegration gitLabIntegration, UserService userService, SongService songService) {
+    private final I18nService i18nService;
+
+    public GitLabSongIndexer(GitLabIntegration gitLabIntegration, UserService userService,
+                             SongService songService, I18nService i18nService) {
         this.gitLabIntegration = gitLabIntegration;
         this.userService = userService;
         this.songService = songService;
+        this.i18nService = i18nService;
     }
 
     // Run every 30 minutes
     @Scheduled(cron = "0 0/30 * * * ?")
     protected void reindexAllUsersGitLabSongs() {
-        logger.info("Started reindexing GitLab songs for all users");
+        logger.info(i18nService.getMessage("gitlab.indexer.start"));
         List<User> users = userService.getAll();
         users.stream().filter(User::hasValidGitSettings).forEach(this::updateGitLabSongs);
     }
@@ -56,7 +61,7 @@ public class GitLabSongIndexer {
                     .collect(Collectors.toList()));
             songService.saveAll(songs);
         } catch (SongsListRetrievalException songsListRetrievalException) {
-            logger.warn("Indexer fail to get songs list of GitLab", songsListRetrievalException);
+            logger.warn(i18nService.getMessage("gitlab.indexer.fail"), songsListRetrievalException);
         }
 
     }

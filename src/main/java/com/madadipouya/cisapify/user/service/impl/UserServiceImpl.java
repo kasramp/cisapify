@@ -1,5 +1,6 @@
 package com.madadipouya.cisapify.user.service.impl;
 
+import com.madadipouya.cisapify.i18n.service.I18nService;
 import com.madadipouya.cisapify.user.exception.UserNotFoundException;
 import com.madadipouya.cisapify.user.model.User;
 import com.madadipouya.cisapify.user.repository.UserRepository;
@@ -19,10 +20,13 @@ public class UserServiceImpl implements UserService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private final I18nService i18nService;
 
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, I18nService i18nService) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.i18nService = i18nService;
     }
 
     @Override
@@ -37,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getCurrentUser() throws UserNotFoundException {
-        return getLoggedInUser().orElseThrow(() -> new UserNotFoundException("Cannot find the user"));
+        return getLoggedInUser().orElseThrow(() -> new UserNotFoundException(i18nService.getMessage("user.service.userNotFound")));
     }
 
     @Override

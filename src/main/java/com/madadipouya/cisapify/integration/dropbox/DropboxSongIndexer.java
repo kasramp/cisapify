@@ -2,6 +2,7 @@ package com.madadipouya.cisapify.integration.dropbox;
 
 import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.app.song.service.SongService;
+import com.madadipouya.cisapify.i18n.service.I18nService;
 import com.madadipouya.cisapify.integration.base.exception.SongsListRetrievalException;
 import com.madadipouya.cisapify.user.model.User;
 import com.madadipouya.cisapify.user.service.UserService;
@@ -25,18 +26,21 @@ public class DropboxSongIndexer {
 
     private final SongService songService;
 
-    public DropboxSongIndexer(DropboxIntegration dropboxIntegration, UserService userService, SongService songService) {
+    private final I18nService i18nService;
+
+    public DropboxSongIndexer(DropboxIntegration dropboxIntegration, UserService userService,
+                              SongService songService, I18nService i18nService) {
         this.dropboxIntegration = dropboxIntegration;
         this.userService = userService;
         this.songService = songService;
+        this.i18nService = i18nService;
     }
 
     // Run every 30 minutes
     @Scheduled(cron = "0 0/30 * * * ?")
     protected void reindexAllUsersDropboxSongs() {
-        logger.info("Started reindexing Dropbox songs for all users");
-        List<User> users = userService.getAll();
-        users.stream().filter(User::hasValidDropboxToken).forEach(this::updateDropboxSongs);
+        logger.info(i18nService.getMessage("dropbox.indexer.start"));
+        userService.getAll().stream().filter(User::hasValidDropboxToken).forEach(this::updateDropboxSongs);
     }
 
     @Async
@@ -56,7 +60,7 @@ public class DropboxSongIndexer {
                     .collect(Collectors.toList()));
             songService.saveAll(songs);
         } catch (SongsListRetrievalException songsListRetrievalException) {
-            logger.warn("Indexer fail to get songs list of Dropbox", songsListRetrievalException);
+            logger.warn(i18nService.getMessage("dropbox.indexer.fail"), songsListRetrievalException);
         }
     }
 }

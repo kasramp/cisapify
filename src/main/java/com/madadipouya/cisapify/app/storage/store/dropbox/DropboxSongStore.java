@@ -8,6 +8,7 @@ import com.madadipouya.cisapify.app.storage.store.StoredFileDetails;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreException;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreOperationNotSupportedException;
 import com.madadipouya.cisapify.app.storage.store.exception.StoreRemoteObjectRetrievingException;
+import com.madadipouya.cisapify.i18n.service.I18nService;
 import com.madadipouya.cisapify.integration.base.exception.FailRetrievingRemoteObjectException;
 import com.madadipouya.cisapify.integration.dropbox.DropboxIntegration;
 import org.springframework.core.io.Resource;
@@ -21,8 +22,11 @@ public class DropboxSongStore extends AbstractSongStore implements SongStore {
 
     private final DropboxIntegration dropboxIntegration;
 
-    public DropboxSongStore(DropboxIntegration dropboxIntegration) {
+    private final I18nService i18nService;
+
+    public DropboxSongStore(DropboxIntegration dropboxIntegration, I18nService i18nService) {
         this.dropboxIntegration = dropboxIntegration;
+        this.i18nService = i18nService;
     }
 
     @Override
@@ -30,18 +34,18 @@ public class DropboxSongStore extends AbstractSongStore implements SongStore {
         try {
             return super.load(dropboxIntegration.loadRemoteSong(song.getUser().getDropboxToken(), song));
         } catch (IOException | FailRetrievingRemoteObjectException | StoreException exception) {
-            throw new StoreRemoteObjectRetrievingException(String.format("Failed to load the song id: %s of Dropbox", song.getId()), exception);
+            throw new StoreRemoteObjectRetrievingException(i18nService.getMessage("dropbox.store.failedToLoadSong", song.getId()), exception);
         }
     }
 
     @Override
     public StoredFileDetails store(MultipartFile file) {
-        throw new StoreOperationNotSupportedException("Dropbox store does not support store/save mode at this moment.");
+        throw new StoreOperationNotSupportedException(i18nService.getMessage("dropbox.store.noSaveSupport"));
     }
 
     @Override
     public void delete(Song song) {
-        throw new StoreOperationNotSupportedException("Dropbox does not support delete mode at this moment.");
+        throw new StoreOperationNotSupportedException(i18nService.getMessage("dropbox.store.noDeleteSupport"));
     }
 
     @Override

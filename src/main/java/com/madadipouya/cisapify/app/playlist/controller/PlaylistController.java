@@ -3,6 +3,7 @@ package com.madadipouya.cisapify.app.playlist.controller;
 import com.madadipouya.cisapify.app.playlist.model.Playlist;
 import com.madadipouya.cisapify.app.playlist.service.PlaylistService;
 import com.madadipouya.cisapify.app.song.service.SongService;
+import com.madadipouya.cisapify.i18n.service.I18nService;
 import com.madadipouya.cisapify.user.model.User;
 import com.madadipouya.cisapify.user.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -28,10 +29,13 @@ public class PlaylistController {
 
     private final SongService songService;
 
-    public PlaylistController(PlaylistService playlistService, UserService userService, SongService songService) {
+    private final I18nService i18nService;
+
+    public PlaylistController(PlaylistService playlistService, UserService userService, SongService songService, I18nService i18nService) {
         this.playlistService = playlistService;
         this.userService = userService;
         this.songService = songService;
+        this.i18nService = i18nService;
     }
 
     @GetMapping("/playlists")
@@ -42,8 +46,7 @@ public class PlaylistController {
                     new PlaylistShowCommand(playlist.getName(), playlist.getId(), playlist.getSongs().size()))
                     .collect(Collectors.toList()));
         } else {
-            model.addAttribute("message", "You do not have any playlist. " +
-                    "To create click <a href='/user/playlists/create'>here</a>");
+            model.addAttribute("message", i18nService.getMessage("playlist.controller.noPlaylist"));
         }
         return "app/playlist/playlist.html";
     }

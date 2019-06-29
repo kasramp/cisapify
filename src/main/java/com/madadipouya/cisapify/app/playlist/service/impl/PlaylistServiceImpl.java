@@ -6,6 +6,7 @@ import com.madadipouya.cisapify.app.playlist.repository.PlaylistRepository;
 import com.madadipouya.cisapify.app.playlist.service.PlaylistService;
 import com.madadipouya.cisapify.app.song.model.Song;
 import com.madadipouya.cisapify.app.song.service.SongService;
+import com.madadipouya.cisapify.i18n.service.I18nService;
 import com.madadipouya.cisapify.user.model.User;
 import com.madadipouya.cisapify.user.service.UserService;
 import org.springframework.stereotype.Service;
@@ -22,10 +23,13 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     private final SongService songService;
 
-    public PlaylistServiceImpl(PlaylistRepository playlistRepository, UserService userService, SongService songService) {
+    private final I18nService i18nService;
+
+    public PlaylistServiceImpl(PlaylistRepository playlistRepository, UserService userService, SongService songService, I18nService i18nService) {
         this.playlistRepository = playlistRepository;
         this.userService = userService;
         this.songService = songService;
+        this.i18nService = i18nService;
     }
 
     @Override
@@ -67,7 +71,7 @@ public class PlaylistServiceImpl implements PlaylistService {
                 .stream()
                 .filter(playlist -> playlist.getId() == playlistId)
                 .findFirst()
-                .orElseThrow(() -> new PlaylistNotExistException(String.format("Playlist %s does not exist", playlistId)))
+                .orElseThrow(() -> new PlaylistNotExistException(i18nService.getMessage("playlist.service.playlistNotExist", playlistId)))
                 .getSongs();
     }
 

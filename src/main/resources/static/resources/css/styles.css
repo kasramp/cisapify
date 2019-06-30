@@ -46,6 +46,10 @@
     cursor: pointer;
 }
 
+#pauseBtn {
+    color: #28a745;
+}
+
 .custom-file {
     overflow: hidden;
 }

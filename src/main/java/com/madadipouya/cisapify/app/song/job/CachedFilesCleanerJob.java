@@ -26,7 +26,7 @@ public class CachedFilesCleanerJob {
     }
 
     // Run every 2 hours
-    @Scheduled(cron = "0 */2 * * * ?")
+    @Scheduled(cron = "0 0/120 * * * ?")
     protected void deleteSongsInTempDirectoryOlderThanTwoHours() {
         logger.info(i18nService.getMessage("song.job.cachedFilesCleaner.start"));
         List<Path> songsToDelete = SongUtil.getSongsInTempDirectoryOlderThan(getTwoHoursAgoTime());

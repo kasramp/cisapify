@@ -71,3 +71,14 @@ CREATE TABLE IF NOT EXISTS playlist_song (
   CONSTRAINT fk_playlist_song_playlist_id FOREIGN KEY (playlist_id) REFERENCES playlists (id),
   CONSTRAINT fk_playlist_song_song_id FOREIGN KEY (song_id) REFERENCES songs (id)
 ) engine=InnoDB;
+
+CREATE TABLE IF NOT EXISTS system_settings (
+    id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(1024) NOT NULL,
+    value VARCHAR(1024) NOT NULL,
+    description LONGTEXT NOT NULL,
+    creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_update_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT uc_system_settings_name UNIQUE (name)
+    INDEX idx_system_settings_name (name)
+) engine=InnoDB;

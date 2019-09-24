@@ -75,3 +75,16 @@ CREATE TABLE playlist_song (
   CONSTRAINT fk_playlist_song_playlist_id FOREIGN KEY (playlist_id) REFERENCES playlists (id),
   CONSTRAINT fk_playlist_song_song_id FOREIGN KEY (song_id) REFERENCES songs (id)
 );
+
+DROP TABLE system_settings IF EXISTS;
+
+CREATE TABLE system_settings (
+    id INTEGER IDENTITY PRIMARY KEY,
+    name VARCHAR(1024) NOT NULL,
+    value VARCHAR(1024) NOT NULL,
+    description VARCHAR(10240) NOT NULL,
+    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    last_update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT uc_system_settings_name UNIQUE (name)
+);
+CREATE INDEX idx_system_settings_name ON system_settings (name);

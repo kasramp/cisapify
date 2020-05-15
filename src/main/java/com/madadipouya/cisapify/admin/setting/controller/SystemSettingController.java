@@ -4,14 +4,7 @@ import com.madadipouya.cisapify.admin.setting.exception.SettingNotFoundException
 import com.madadipouya.cisapify.admin.setting.model.SystemSetting;
 import com.madadipouya.cisapify.admin.setting.service.SystemSettingService;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -19,7 +12,7 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/admin/system/settings")
+@RequestMapping(value = "/api/v1/admin/system/settings")
 public class SystemSettingController {
 
     private final SystemSettingService systemSettingService;
@@ -30,14 +23,14 @@ public class SystemSettingController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public SystemSetting createSystemSetting(@Valid SystemSettingDto systemSettingDto) {
+    public SystemSetting createSystemSetting(@Valid @RequestBody SystemSettingDto systemSettingDto) {
         return systemSettingService.createSetting(systemSettingDto.getAsSystemSetting());
     }
 
-    @GetMapping(value = "/{name}")
+    @GetMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    private SystemSetting getSystemSettingByName(@PathVariable String name) throws SettingNotFoundException {
-        return systemSettingService.getSetting(name);
+    private SystemSetting getSystemSettingByName(@PathVariable long id) throws SettingNotFoundException {
+        return systemSettingService.getSetting(id);
     }
 
     @PutMapping(value = "/{id}")

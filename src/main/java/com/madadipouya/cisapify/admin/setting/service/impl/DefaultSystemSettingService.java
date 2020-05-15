@@ -7,6 +7,8 @@ import com.madadipouya.cisapify.admin.setting.service.SystemSettingService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 @Service
@@ -25,7 +27,12 @@ public class DefaultSystemSettingService implements SystemSettingService {
 
     @Override
     public SystemSetting getSetting(String systemSettingName) throws SettingNotFoundException {
-        return systemSettingRepository.getByName(systemSettingName).orElseThrow(() -> new SettingNotFoundException(String.format("Unable to find setting %s.", systemSettingName)));
+        return systemSettingRepository.getByName(systemSettingName).orElseThrow(() -> new SettingNotFoundException(String.format("Unable to find setting '%s'.", systemSettingName)));
+    }
+
+    @Override
+    public SystemSetting getSetting(long id) throws SettingNotFoundException {
+        return systemSettingRepository.findById(id).orElseThrow(() -> new SettingNotFoundException(String.format("Unable to find setting '%s'.", id)));
     }
 
     @Override

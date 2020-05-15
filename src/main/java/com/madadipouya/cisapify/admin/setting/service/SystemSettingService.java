@@ -11,6 +11,8 @@ public interface SystemSettingService {
 
     SystemSetting getSetting(String systemSettingName) throws SettingNotFoundException;
 
+    SystemSetting getSetting(long id) throws SettingNotFoundException;
+
     List<SystemSetting> getAllSettings();
 
     SystemSetting updateSetting(long id, SystemSetting updatedSetting) throws SettingNotFoundException;
